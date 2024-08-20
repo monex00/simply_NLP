@@ -1,0 +1,73 @@
+[
+    {
+        "question": "Quali sono le fasi della NLG simbolica?",
+        "answer": "Le fasi sono TextPlanning , SentencePlanning e Realization",
+        "required": [
+            {
+                "lemma": "Textplanning",
+                "question": [{"text": "Non manca una fase che viene prima di tutte le altre?", "trigger": "0**"}],
+                "score": 0,
+                "weight" : 0.3,
+                "retries": 0,
+                "dependencies" : []
+            },
+            {
+                "lemma": "Sentenceplanning",
+                "question": [{"text": "Non manca una fase che si trova in mezzo alle altre?", "trigger": "*0*"}],
+                "score": 0,
+                "weight" : 0.3,
+                "retries": 0,
+                "dependencies" : []
+            },
+            {
+                "lemma": "Realization",
+                "question": [{"text": "Non manca una fase che viene dopo tutte le altre?", "trigger": "**0"}],
+                "score": 0,
+                "weight" : 0.3,
+                "retries": 0,
+                "dependencies" : []
+            }
+        ],
+        "state": "000"
+    },
+    {
+        "question": "Cosa è una Probabilistic CFG?",
+        "answer": "È una grammatica CFG in cui ogni regola di produzione ha una probabilità associata",
+        "required": [
+            {
+                "lemma": "grammatica",
+                "question": [{"text": "Cos'è una CFG?", "trigger": "0**"}],
+                "score": 0,
+                "weight" : 0.3,
+                "retries": 0,
+                "dependencies" : []
+            },
+            {
+                "lemma": "regola",
+                "question": [{"text": "Da cosa è caratterizzata una grammatica?", "trigger": "*0*"}],
+                "score": 0,
+                "weight" : 0.3,
+                "retries": 0,
+                "dependencies" : [
+                    {
+                        "to": "produzione",
+                        "type": "nmod",
+                        "score": 0,
+                        "question": [{"text": "Che tipo di regola stiamo parlando?", "trigger": "*1*"}],
+                        "weight" : 0.1,
+                        "retries": 0
+                    }
+                ]
+            },
+            {
+                "lemma": "probabilità",
+                "question": [{"text": "Cosa ha associata ogni regola?", "trigger": "*10"}],
+                "score": 0,
+                "weight" : 0.3,
+                "retries": 0,
+                "dependencies" : []
+            }
+        ],
+        "state": "000"
+    }
+]
