@@ -6,19 +6,19 @@
         "required": [
             {
                 "lemma": "Textplanning",
-                "fill_questions": [{"text": "Non manca una fase che viene prima di tutte le altre?", "trigger": "0**"}, {"text": "Qual'è la fase che si occupa della pianificazione del discorso e del contenuto?", "trigger": "0**"}],
+                "fill_questions": [{"text": "Non manca una fase che viene prima di tutte le altre?", "intention": [],"trigger": "0**"}, {"text": "Qual'è la fase che si occupa della pianificazione del discorso e del contenuto?", "intention": [],"trigger": "0**"}],
                 "weight" : 0.3,
                 "dependencies" : []
             },
             {
                 "lemma": "Sentenceplanning",
-                "fill_questions": [{"text": "Non manca una fase che si trova in mezzo alle altre?", "trigger": "*0*"}, {"text": "Qual'è la fase che si occupa della formazione delle frasi?", "trigger": "*0*"}],
+                "fill_questions": [{"text": "Non manca una fase che si trova in mezzo alle altre?", "intention": [],"trigger": "*0*"}, {"text": "Qual'è la fase che si occupa della formazione delle frasi?", "intention": [],"trigger": "*0*"}],
                 "weight" : 0.3,
                 "dependencies" : []
             },
             {
                 "lemma": "Realization",
-                "fill_questions": [{"text": "Non manca una fase che viene dopo tutte le altre?", "trigger": "**0"}, {"text": "Qual'è la fase che si occupa ti trasformare il contenuto in testo grammaticalmente corretto?", "trigger": "**0"}],
+                "fill_questions": [{"text": "Non manca una fase che viene dopo tutte le altre?", "intention": [],"trigger": "**0"}, {"text": "Qual'è la fase che si occupa ti trasformare il contenuto in testo grammaticalmente corretto?", "intention": [],"trigger": "**0"}],
                 "weight" : 0.3,
                 "dependencies" : []
             }
@@ -31,26 +31,30 @@
         "required": [
             {
                 "lemma": "grammatica",
-                "fill_questions": [{"text": "Cos'è una CFG?", "trigger": "0**"}],
+                "fill_questions": [
+                    {"text":"Una cgf è una grammatica", "intention": ["WHAT_OBJECT", "YES_NO"], "trigger": "0**"}
+                ],
                 "weight" : 0.3,
                 "dependencies" : []
             },
             {
                 "lemma": "regola",
-                "fill_questions": [{"text": "Da cosa è caratterizzata una grammatica?", "trigger": "*0*"}],
+                "fill_questions": [{"text":"Le regole caratterizzano una grammatica", "intention": ["WHAT_SUBJECT"], "trigger": "*0*"}],
                 "weight" : 0.3,
                 "dependencies" : [
                     {
                         "to": "produzione",
                         "type": "nmod",
-                        "fill_questions": [{"text": "Che tipo di regola stiamo parlando?", "trigger": "*1*"}],
+                        "fill_questions": [{"text":"Qual è il tipo delle regole?", "intention": [], "trigger": "*1*"}],
                         "weight" : 0.1
                     }
                 ]
             },
             {
                 "lemma": "probabilità",
-                "fill_questions": [{"text": "Cosa ha associata ogni regola?", "trigger": "*10"}, {"text": "Che differenza c'è tra la PCFG e CFG?", "trigger": "**0"}],
+                "fill_questions": [
+                    {"text":"Ogni regola ha associata una probabilità", "intention":["WHAT_OBJECT", "YES_NO"], "trigger": "*10"}
+                ],
                 "weight" : 0.3,
                 "dependencies" : []
             }

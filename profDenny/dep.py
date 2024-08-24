@@ -1,9 +1,26 @@
 import pandas as pd
 import requests
 import json
+import subprocess
 
 
 NUM_RETRIES = 3
+
+def udipipe_api(text):
+    baseUlr = "http://lindat.mff.cuni.cz/services/udpipe/api/process?tokenizer&tagger&parser&model=italian-isdt-ud-2.12-230717&data="
+    response = requests.get(baseUlr + text)
+    data = response.json()
+    result = data["result"]
+
+    return result
+
+
+def execute_subcommand(text, intention):
+    application="java"
+    # print(text)
+    result = subprocess.run([application,"-cp", "./simpleNLG-IT/simplenlg-it.jar", "./simpleNLG-IT/SimpleNlgProxyLoris.java", text, intention], stdout=subprocess.PIPE)
+    output = result.stdout.decode('utf-8')
+    return output
 
 class Record:
     def __init__(self, intention, question, answer):
@@ -55,12 +72,20 @@ class Token:
         
 
 class FillQuestion:
-    def __init__(self, question, trigger):
+    def __init__(self, question, trigger, intention):
         self.question = question
+        self.intention = intention
         self.trigger = trigger
 
+    def realize_question(self):
+        print(self.intention)
+        if len(self.intention) == 0:
+            return self.question
+        q = execute_subcommand(self.question, self.intention[0])
+        return q
+
     def __str__(self):
-        return "\t\t\tQuestion: " + self.question + "\n\t\t\tTrigger: " + self.trigger
+        return "\t\t\tQuestion: " + self.question + "\n\t\t\tTrigger: " + self.trigger  + "\n\t\t\tIntention: " + str(self.intention)
 
 
 class RequiredWord:
@@ -69,7 +94,6 @@ class RequiredWord:
         self.fill_questions = []
         self.weight = float(weight)
         self.score = 0
-        self.retries = 0
         self.dependencies = []
 
     def add_dependency(self, dep):
@@ -79,8 +103,17 @@ class RequiredWord:
         self.fill_questions.append(question)
     
     def remove_fill_question(self, question):
-        self.fill_questions.remove(question)
+        removed_intention = ""
+        if(len(question.intention) == 0 ):
+            self.fill_questions.remove(question)
+        else: 
+            removed_intention = question.intention.pop(0)
+            if(len(question.intention) == 0 ):
+                self.fill_questions.remove(question)
+        
+        return removed_intention
 
+    
     def __str__(self):
         fill_questions_str = ""
         for fill_question in self.fill_questions:
@@ -88,7 +121,7 @@ class RequiredWord:
         dependencies_str = ""
         for dep in self.dependencies:
             dependencies_str += str(dep) + "\n"
-        return "\tLemma: " + self.lemma + "\n\tWeight: " + str(self.weight) + "\n\tScore: " + str(self.score) + "\n\tRetries: " + str(self.retries) + "\n\tFill Questions:\n" + fill_questions_str + "\n\tDependencies:\n" + dependencies_str
+        return "\tLemma: " + self.lemma + "\n\tWeight: " + str(self.weight) + "\n\tScore: " + str(self.score) + "\n\tFill Questions:\n" + fill_questions_str + "\n\tDependencies:\n" + dependencies_str
         
 
 class RequiredDependency:
@@ -98,19 +131,26 @@ class RequiredDependency:
         self.fill_questions = []
         self.weight = float(weight)
         self.score = 0
-        self.retries = 0
     
     def add_fill_question(self, question):
         self.fill_questions.append(question)
     
     def remove_fill_question(self, question):
-        self.fill_questions.remove(question)
+        removed_intention = ""
+        if(len(question.intention) == 0 ):
+            self.fill_questions.remove(question)
+        else: 
+            removed_intention = question.intention.pop(0)
+            if(len(question.intention) == 0 ):
+                self.fill_questions.remove(question)
+
+        return removed_intention
 
     def __str__(self):
         fill_questions_str = ""
         for fill_question in self.fill_questions:
             fill_questions_str += str(fill_question) + "\n"
-        return "\t\tTo: " + self.to + "\n\t\tType: " + self.type + "\n\t\tWeight: " + str(self.weight) + "\n\t\tScore: " + str(self.score) + "\n\t\tRetries: " + str(self.retries) + "\n\t\tFill Questions:\n" + fill_questions_str
+        return "\t\tTo: " + self.to + "\n\t\tType: " + self.type + "\n\t\tWeight: " + str(self.weight) + "\n\t\tScore: " + str(self.score) + "\n\t\tFill Questions:\n" + fill_questions_str
 
 class Frame:
     def __init__(self, question, answer, name):
@@ -119,17 +159,23 @@ class Frame:
         self.answer = answer
         self.state = ""
         self.required_slots = []
+        self.retries = 0
         
     def add_required_slot(self, required_slot):
         self.required_slots.append(required_slot)
         self.state += '0'
+        self.retries +=1
+
+    def add_dependency(self, slot, dep):
+        slot.add_dependency(dep)
+        self.retries +=1
 
     def check_frame(self):
         for required_slot in self.required_slots:
-            if required_slot.score == 0 and required_slot.retries < NUM_RETRIES:
+            if required_slot.score == 0 and self.retries > 0:
                 return False
             for dep in required_slot.dependencies:
-                if dep.score == 0 and dep.retries < NUM_RETRIES:
+                if dep.score == 0 and self.retries > 0:
                     return False
         return True
 
@@ -141,38 +187,39 @@ class Frame:
                 return False
         return True
     
+    
     def get_fill_questions(self):
         for required_slot in self.required_slots:
-            if required_slot.score == 0 and required_slot.retries < NUM_RETRIES:
+            if required_slot.score == 0 and self.retries > 0:
                 for question in required_slot.fill_questions:
                     if(self.is_triggering(question.trigger)):
-                        required_slot.remove_fill_question(question)
-                        return question, None, required_slot
+                        print(question.question)
+                        question_text = question.realize_question()
+                        intention = required_slot.remove_fill_question(question)
+                        self.retries -=1
+                        return question_text, None, required_slot, intention
                 
             for dep in required_slot.dependencies:
-                if dep.score == 0 and dep.retries < NUM_RETRIES:
+                if dep.score == 0 and self.retries > 0:
                     for question in dep.fill_questions:
                         if(self.is_triggering(question.trigger)):
-                            dep.remove_fill_question(question)
-                            return question, dep, None
-        return None, None, None
+                            print(question.question)
+                            question_text = question.realize_question()
+                            intention = dep.remove_fill_question(question)
+                            self.retries -=1
+                            return question_text, dep, None, intention
+        return None, None, None, None
 
         
     def __str__(self):
         required_slots_str = ""
         for required_slot in self.required_slots:
             required_slots_str += str(required_slot) + "\n"
-        return "Question: " + self.question + "\nAnswer: " + self.answer + "\nState: " + self.state + "\nRequired Slots:\n" + required_slots_str
-        
-    
-    
-        
-def get_dependencies(text):
-    baseUlr = "http://lindat.mff.cuni.cz/services/udpipe/api/process?tokenizer&tagger&parser&model=italian-isdt-ud-2.12-230717&data="
-    response = requests.get(baseUlr + text)
-    data = response.json()
-    result = data["result"]
+        return "Question: " + self.question + "\nAnswer: " + self.answer + "\nState: " + self.state + "\nRetries: " + str(self.retries) + "\nRequired Slots:\n" +  required_slots_str
+      
 
+def get_dependencies(text):
+    result = udipipe_api(text)
     text = result.split("\n")[7:]
 
     # Converte il testo in un DataFrame
@@ -185,7 +232,9 @@ def get_dependencies(text):
     for row in data:
         if(len(row) < 10):
             continue
-
+        
+        if(row[6]=='_'):
+            continue
         head_index = int(row[6])
         head = None
         if head_index == 0:
@@ -210,30 +259,43 @@ def get_dependencies(text):
 
     return tokens
 
-def set_score_dep(dependencies, token):
-    for dep in dependencies:
-        for child in token.children:
-            if child.lemma == dep.to and child.dep == dep.type:
-                dep.score = 1
+def set_score_dep(dependencies, token, removed_intention, single_dep = False):
+    if (single_dep): 
+        if(removed_intention == "YES_NO" and token.lemma == "si"):
+            dependencies[0].score = 0.20
+        else:
+            for child in token.children:
+                if child.lemma == dependencies[0].to and child.dep == dependencies[0].type:
+                    dependencies[0].score = 0.60
+    else:
+        for dep in dependencies:
+            for child in token.children:
+                if child.lemma == dep.to and child.dep == dep.type:
+                    dep.score = 1
 
-def set_score_slot(frame, required_slots, token):
-    for required_slot in required_slots:
-        if token.lemma == required_slot.lemma:
-            required_slot.score = 1 #TODO: 
-            required_slot_index = frame.required_slots.index(required_slot)
-            frame.state = frame.state[:required_slot_index] + '1' + frame.state[required_slot_index + 1:]
-            set_score_dep(required_slot.dependencies, token)
+def set_score_slot(frame, required_slots, token, removed_intention):
+    if (len(required_slots) == 1): 
+        if(removed_intention == "YES_NO" and token.lemma == "si"):
+            required_slots[0].score = 0.20
+        elif(token.lemma == required_slots[0].lemma):
+            required_slots[0].score = 0.60
+            set_score_dep(required_slots[0].dependencies, token, '')
+    else:
+        for required_slot in required_slots:
+            if token.lemma == required_slot.lemma:
+                required_slot.score = 1 
+                required_slot_index = frame.required_slots.index(required_slot)
+                frame.state = frame.state[:required_slot_index] + '1' + frame.state[required_slot_index + 1:]
+                set_score_dep(required_slot.dependencies, token, removed_intention)
 
-def fill_frame(frame, tokens, single_slot = None, single_dep = None):
+def fill_frame(frame, tokens, removed_intention, single_slot = None, single_dep = None ):
     for token in tokens:
         if single_slot is not None:
-            set_score_slot(frame, [single_slot], token)
+            set_score_slot(frame, [single_slot], token, removed_intention)
         elif single_dep is not None:
-            if token.lemma == single_dep.to and token.dep == single_dep.type:
-                single_dep.score = 1
-                set_score_dep(single_dep.dependencies, token)
+            set_score_dep([single_dep], token, removed_intention, True)
         else:
-            set_score_slot(frame, frame.required_slots, token)
+            set_score_slot(frame, frame.required_slots, token, removed_intention)
 
 def main():
     f = open('frames.json')
@@ -247,42 +309,40 @@ def main():
             req = RequiredWord(required_slot['lemma'], required_slot['weight'])
 
             for question in required_slot['fill_questions']: # each question in the required slot
-                req.add_fill_question(FillQuestion(question['text'], question['trigger']))
+                req.add_fill_question(FillQuestion(question['text'], question['trigger'], question["intention"]))
                 
             for dep in required_slot['dependencies']: # each dependency in the required slot
                 new_dep = RequiredDependency(dep['to'], dep['type'], dep['weight'])
                 for question_dep in dep['fill_questions']: # each question in the dependency
-                    new_dep.add_fill_question(FillQuestion(question_dep['text'], question_dep['trigger']))
-                req.add_dependency(new_dep)
+                    new_dep.add_fill_question(FillQuestion(question_dep['text'], question_dep['trigger'], question_dep["intention"]))
+                # req.add_dependency(new_dep)
+                frame.add_dependency(req, new_dep)
             
             frame.add_required_slot(req)
     
         frames.append(frame)
+    
+    print(frames[1])
 
 
     for i in range(0,1):
         text = input(frames[1].question + "\n")
         history.add_record(frames[1].name, Record("fill", frames[1].question, text))
-        fill_frame(frames[1], get_dependencies(text))
-        print(frames[1].check_frame())
+        fill_frame(frames[1], get_dependencies(text), '')
         while (frames[1].check_frame() == False):
             print("Frame not complete")
-            question, dep, slot = frames[1].get_fill_questions()
+            question, dep, slot, removed_intention = frames[1].get_fill_questions()
             if question is None:
                 print("No question found")
                 break
-            text = input(question.question + "\n")
-            history.add_record(frames[1].name, Record("fill", question.question, text))
-            fill_frame(frames[1], get_dependencies(text), slot, dep)
+            text = input(question + "\n")
+            history.add_record(frames[1].name, Record("fill", question, text))
+            fill_frame(frames[1], get_dependencies(text), removed_intention, slot, dep)
         
         print(frames[1])
-
-    
-    """ for i in range(0,1):
-        text = input(frames[1]['question'])
-        fill_frame(frames, 1, get_dependencies(text)) """
-
 
 
 if __name__ == "__main__":
     main()
+    # print(execute_subcommand("Una cgf è una grammatica", "WHAT_OBJECT"))
+    # print(udipipe_api("Una cgf è una grammatica"))

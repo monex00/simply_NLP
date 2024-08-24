@@ -1,0 +1,64 @@
+[
+    {
+        "name": "NLG",
+        "question": "Quali sono le fasi della NLG simbolica?",
+        "answer": "Le fasi sono TextPlanning , SentencePlanning e Realization",
+        "required": [
+            {
+                "lemma": "Textplanning",
+                "fill_questions": [{"text": "Non manca una fase che viene prima di tutte le altre?", "trigger": "0**"}, {"text": "Qual'è la fase che si occupa della pianificazione del discorso e del contenuto?", "trigger": "0**"}],
+                "weight" : 0.3,
+                "dependencies" : []
+            },
+            {
+                "lemma": "Sentenceplanning",
+                "fill_questions": [{"text": "Non manca una fase che si trova in mezzo alle altre?", "trigger": "*0*"}, {"text": "Qual'è la fase che si occupa della formazione delle frasi?", "trigger": "*0*"}],
+                "weight" : 0.3,
+                "dependencies" : []
+            },
+            {
+                "lemma": "Realization",
+                "fill_questions": [{"text": "Non manca una fase che viene dopo tutte le altre?", "trigger": "**0"}, {"text": "Qual'è la fase che si occupa ti trasformare il contenuto in testo grammaticalmente corretto?", "trigger": "**0"}],
+                "weight" : 0.3,
+                "dependencies" : []
+            }
+        ]
+    },
+    {
+        "name": "PCFG",
+        "question": "Cosa è una Probabilistic CFG?",
+        "answer": "È una grammatica CFG in cui ogni regola di produzione ha una probabilità associata",
+        "required": [
+            {
+                "lemma": "grammatica",
+                "fill_questions": [
+                    {"verb": "essere", "tense":"presente", "subject": "una cfg", "object": "una grammatica", "gender":"11", "intention": ["WHAT_OBJECT", "YES_NO"], "trigger": "0**"}
+                ],
+                "weight" : 0.3,
+                "dependencies" : []
+            },
+            {
+                "lemma": "regola",
+                "fill_questions": [{"verb": "caratterizzare", "tense": "passivo", "object": "le regole", "subject":"una grammatica", "intention": ["HOW"], "trigger": "*0*", "gender":"11"}],
+                "weight" : 0.3,
+                "dependencies" : [
+                    {
+                        "to": "produzione",
+                        "type": "nmod",
+                        "fill_questions": [{"verb": "essere", "tense": "presente", "object": "di produzione", "subject":"le regole", "intention": "HOW", "gender":"", "trigger": "*1*"}],
+                        "weight" : 0.1
+                    }
+                ]
+            },
+            {
+                "lemma": "probabilità",
+                "fill_questions": [
+                    {"verb":"associare", "tense":"passato prossimo", "object":"uno probabilità", "subject": "ogni regola", "intention":["WHAT_OBJECT", "YES_NO"],  "gender":"11", "trigger": "*10"}
+                ],
+                "weight" : 0.3,
+                "dependencies" : []
+            }
+        ]
+    }
+]
+
