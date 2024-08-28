@@ -22,7 +22,8 @@
                 "weight" : 0.3,
                 "dependencies" : []
             }
-        ]
+        ],
+        "domain":[]
     },
     {
         "name": "PCFG",
@@ -58,6 +59,17 @@
                 "weight" : 0.3,
                 "dependencies" : []
             }
+        ],
+        "domain": [
+            "probabilistic", "cfg", 
+            "modello", "probabilistico", "stocastico", 
+            "generativo", "pcfg", "libero", "contesto", 
+            "linguaggio", "formale", "regola", "sintattico", 
+            "grammatica", "computazionale", "automata", 
+            "produzione", "trasformazione", "derivazione", 
+            "riscrittura", "distribuzione", "probabilità", 
+            "likelihood", "verosimiglianza", "misura", 
+            "valore", "atteso", "peso", "fattore"
         ]
     }
 ]

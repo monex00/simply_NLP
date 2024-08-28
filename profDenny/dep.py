@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import requests
 import json
 import subprocess
@@ -6,6 +7,7 @@ import subprocess
 
 NUM_RETRIES = 3
 
+# START UTILS FUNCTIONS
 def udipipe_api(text):
     baseUlr = "http://lindat.mff.cuni.cz/services/udpipe/api/process?tokenizer&tagger&parser&model=italian-isdt-ud-2.12-230717&data="
     response = requests.get(baseUlr + text)
@@ -21,6 +23,29 @@ def execute_subcommand(text, intention):
     result = subprocess.run([application,"-cp", "./simpleNLG-IT/simplenlg-it.jar", "./simpleNLG-IT/SimpleNlgProxyLoris.java", text, intention], stdout=subprocess.PIPE)
     output = result.stdout.decode('utf-8')
     return output
+
+def levenshtein_distance(word1, word2):
+    word1 = word1.lower()
+    word2 = word2.lower()
+    dp = np.zeros((len(word1) + 1, len(word2) + 1), dtype=int)
+
+    for i in range(len(word1) + 1):
+        dp[i][0] = i
+    for j in range(len(word2) + 1):
+        dp[0][j] = j
+
+    for i in range(1, len(word1) + 1):
+        for j in range(1, len(word2) + 1):
+            if word1[i - 1] == word2[j - 1]:
+                cost = 0
+            else:
+                cost = 1
+            dp[i][j] = min(dp[i - 1][j] + 1,  
+                           dp[i][j - 1] + 1,
+                           dp[i - 1][j - 1] + cost)
+    
+    return dp[len(word1)][len(word2)]
+# END UTILS FUNCTIONS
 
 class Record:
     def __init__(self, intention, question, answer):
@@ -79,7 +104,7 @@ class FillQuestion:
 
     def realize_question(self):
         print(self.intention)
-        if len(self.intention) == 0:
+        if len(self.intention) == 0 or self.intention[0] == "MISSPELL":
             return self.question
         q = execute_subcommand(self.question, self.intention[0])
         return q
@@ -94,10 +119,14 @@ class RequiredWord:
         self.fill_questions = []
         self.weight = float(weight)
         self.score = 0
+        self.triggered = False
         self.dependencies = []
 
     def add_dependency(self, dep):
         self.dependencies.append(dep)
+
+    def add_fill_question_front(self, question):
+        self.fill_questions.insert(0, question)
 
     def add_fill_question(self, question):
         self.fill_questions.append(question)
@@ -135,6 +164,9 @@ class RequiredDependency:
     def add_fill_question(self, question):
         self.fill_questions.append(question)
     
+    def add_fill_question_front(self, question):
+        self.fill_questions.insert(0, question)
+    
     def remove_fill_question(self, question):
         removed_intention = ""
         if(len(question.intention) == 0 ):
@@ -153,13 +185,18 @@ class RequiredDependency:
         return "\t\tTo: " + self.to + "\n\t\tType: " + self.type + "\n\t\tWeight: " + str(self.weight) + "\n\t\tScore: " + str(self.score) + "\n\t\tFill Questions:\n" + fill_questions_str
 
 class Frame:
-    def __init__(self, question, answer, name):
+    def __init__(self, question, answer, name, domain):
         self.name = name
         self.question = question
         self.answer = answer
         self.state = ""
         self.required_slots = []
         self.retries = 0
+        self.domain = domain
+        self.out_context_words = []
+
+    def add_out_context_word(self, out_context_word):
+        self.out_context_words.append(out_context_word)
         
     def add_required_slot(self, required_slot):
         self.required_slots.append(required_slot)
@@ -187,26 +224,43 @@ class Frame:
                 return False
         return True
     
+    def get_final_score(self):
+        score = 0
+        tot_req = 0
+        for required_slot in self.required_slots:
+            score += required_slot.score * required_slot.weight
+            tot_req += 1
+            for dep in required_slot:
+                score += dep.score * dep.weight
+                tot_req += 1
+
+        """ out of context """
+        for _ in self.out_context_words:
+            if(score - ((1 / tot_req) / 2) < 0):
+                return 0 
+            else:
+                score -= (1 / tot_req) / 2
+        return score
     
     def get_fill_questions(self):
         for required_slot in self.required_slots:
             if required_slot.score == 0 and self.retries > 0:
                 for question in required_slot.fill_questions:
                     if(self.is_triggering(question.trigger)):
-                        print(question.question)
                         question_text = question.realize_question()
                         intention = required_slot.remove_fill_question(question)
-                        self.retries -=1
+                        if intention != "MISSPELL":
+                            self.retries -=1
                         return question_text, None, required_slot, intention
                 
             for dep in required_slot.dependencies:
                 if dep.score == 0 and self.retries > 0:
                     for question in dep.fill_questions:
                         if(self.is_triggering(question.trigger)):
-                            print(question.question)
                             question_text = question.realize_question()
                             intention = dep.remove_fill_question(question)
-                            self.retries -=1
+                            if intention != "MISSPELL":
+                                self.retries -=1
                             return question_text, dep, None, intention
         return None, None, None, None
 
@@ -260,30 +314,52 @@ def get_dependencies(text):
     return tokens
 
 def set_score_dep(dependencies, token, removed_intention, single_dep = False):
-    if (single_dep): 
+    if (single_dep): # single dependency question
+        dependencies[0].triggered = True
         if(removed_intention == "YES_NO" and token.lemma == "si"):
             dependencies[0].score = 0.20
+        elif(removed_intention == "MISSPELL" and token.lemma == "si"):
+            if dependencies[0].triggered == False:
+                dependencies[0].score = 1
+            else:
+                dependencies[0].score = 0.60
         else:
             for child in token.children:
                 if child.lemma == dependencies[0].to and child.dep == dependencies[0].type:
                     dependencies[0].score = 0.60
-    else:
-        for dep in dependencies:
+    else: # frame question
+        for dep in dependencies:  
             for child in token.children:
                 if child.lemma == dep.to and child.dep == dep.type:
                     dep.score = 1
 
 def set_score_slot(frame, required_slots, token, removed_intention):
-    if (len(required_slots) == 1): 
+    if (len(required_slots) == 1): # single slot question 
+        required_slots[0].triggered = True
         if(removed_intention == "YES_NO" and token.lemma == "si"):
             required_slots[0].score = 0.20
+            # state change
+            required_slot_index = frame.required_slots.index(required_slots[0])
+            frame.state = frame.state[:required_slot_index] + '1' + frame.state[required_slot_index + 1:]
+        elif(removed_intention == "MISSPELL" and token.lemma == "si" ):
+            if required_slots[0].triggered == False:
+                required_slots[0].score = 1
+            else:
+                required_slots[0].score = 0.60
+            # state change
+            required_slot_index = frame.required_slots.index(required_slots[0])
+            frame.state = frame.state[:required_slot_index] + '1' + frame.state[required_slot_index + 1:]
         elif(token.lemma == required_slots[0].lemma):
             required_slots[0].score = 0.60
+            # state change
+            required_slot_index = frame.required_slots.index(required_slots[0])
+            frame.state = frame.state[:required_slot_index] + '1' + frame.state[required_slot_index + 1:]
             set_score_dep(required_slots[0].dependencies, token, '')
-    else:
+    else: # frame question
         for required_slot in required_slots:
             if token.lemma == required_slot.lemma:
                 required_slot.score = 1 
+                # state change
                 required_slot_index = frame.required_slots.index(required_slot)
                 frame.state = frame.state[:required_slot_index] + '1' + frame.state[required_slot_index + 1:]
                 set_score_dep(required_slot.dependencies, token, removed_intention)
@@ -297,13 +373,54 @@ def fill_frame(frame, tokens, removed_intention, single_slot = None, single_dep 
         else:
             set_score_slot(frame, frame.required_slots, token, removed_intention)
 
+
+def preprocess_answer(tokens, frame):
+    """ per ogni token """
+    for token in tokens:
+        """ se è un nome  """
+        in_required = False
+        for required_slot in frame.required_slots:
+            slot_index = frame.required_slots.index(required_slot)
+            if levenshtein_distance(token.lemma, required_slot.lemma) <= 2: # TODO: CREATE COSTANT OR CHANGE IT 
+                trigger = "*" * len(frame.state)
+                trigger = trigger[:slot_index] + '0' + trigger[slot_index + 1:]
+                required_slot.add_fill_question_front(FillQuestion("Per " + token.lemma + " intendi " + required_slot.lemma + "?", trigger, ["MISSPELL"]))
+                in_required = True
+            for dep in required_slot.dependencies:
+                if levenshtein_distance(token.lemma, dep.to) <= 2:
+                    trigger = "*" * len(frame.state)
+                    trigger = trigger[:slot_index] + '1' + trigger[slot_index + 1:]
+                    dep.add_fill_question_front(FillQuestion("Per " + token.lemma + " intendi " + dep.to + "?", trigger, ["MISSPELL"]))
+                    in_required = True
+
+
+        if not in_required:
+            if token.pos == 'NOUN':
+                min_dist = len(token.lemma)
+                """ controllo edit distance con il dominio """
+                for word in frame.domain:
+                    token_len = len(token.lemma)
+                    word_len = len(word)
+                    max_len = max(token_len, word_len)
+                    if (abs(token_len - word_len) <=  max_len / 2):
+                        dist = levenshtein_distance(token.lemma, word)
+                        if dist < min_dist:
+                            min_dist = dist
+                if min_dist > 2: # TODO: CREATE COSTANT OR CHANGE IT
+                    frame.add_out_context_word(token.lemma)
+                    return False
+    return True
+
+    
+                        
+
 def main():
     f = open('frames.json')
     json_frames = json.load(f)
     frames = []
     history = History()
     for json_frame in json_frames:
-        frame = Frame(json_frame['question'], json_frame['answer'], json_frame['name'])
+        frame = Frame(json_frame['question'], json_frame['answer'], json_frame['name'], json_frame['domain'])
         
         for required_slot in json_frame['required']: # each required slot
             req = RequiredWord(required_slot['lemma'], required_slot['weight'])
@@ -325,21 +442,40 @@ def main():
     print(frames[1])
 
 
-    for i in range(0,1):
+    number_of_questions = 1
+
+    total_score = 0
+
+    for i in range(0,number_of_questions):
         text = input(frames[1].question + "\n")
+        answer_dependencies = get_dependencies(text)
+       
         history.add_record(frames[1].name, Record("fill", frames[1].question, text))
-        fill_frame(frames[1], get_dependencies(text), '')
+
+        preproc = preprocess_answer(answer_dependencies, frames[1])
+        fill_frame(frames[1], answer_dependencies, '')
+        
         while (frames[1].check_frame() == False):
             print("Frame not complete")
             question, dep, slot, removed_intention = frames[1].get_fill_questions()
             if question is None:
-                print("No question found")
+                print("GG")
+                if not preproc:
+                    print("Non hai centrato l'argomento. Andiamo avanti...")
                 break
+            if not preproc:
+                question = "Non hai centrato l'argomento. " +  question #TODO: create a constant array of messages
             text = input(question + "\n")
             history.add_record(frames[1].name, Record("fill", question, text))
-            fill_frame(frames[1], get_dependencies(text), removed_intention, slot, dep)
-        
+            
+            answer_dependencies = get_dependencies(text)
+            fill_frame(frames[1], answer_dependencies, removed_intention, slot, dep)
+            preproc = preprocess_answer(answer_dependencies, frames[1])
+
+        total_score += frames[1].get_final_score()
         print(frames[1])
+    print("Score: " + ((total_score * 30) / number_of_questions))
+    
 
 
 if __name__ == "__main__":
