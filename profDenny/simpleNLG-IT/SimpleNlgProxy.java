@@ -7,6 +7,7 @@ import simplenlg.features.*;
 
 //args : subject, verb, object, interrogativeType
 public class SimpleNlgProxy {
+	/*
     public static void main(String[] args) {
 		String subject = args[0];
 		String verb = args[1];
@@ -27,7 +28,7 @@ public class SimpleNlgProxy {
 		NPPhraseSpec np_subj = splitted_subject > 1 ? factory.createNounPhrase(splitted_subject[0], splitted_subject[1]) : factory.createNounPhrase(subject);
 		String [] splitted_object = subject.split(" ");
 		NPPhraseSpec np_obj = splitted_object > 1 ? factory.createNounPhrase(splitted_object[0], splitted_object[1]) : factory.createNounPhrase(object);
-		
+
 		//create clause
 		SPhraseSpec clauseIt = italianFactory.createClause(np_subj, verb, np_obj);
 
@@ -45,4 +46,6 @@ public class SimpleNlgProxy {
 		output = realiser.realiseSentence(clauseIt);
 		System.out.print(output);
     }
+
+	 */
 }
