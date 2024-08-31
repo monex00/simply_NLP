@@ -108,7 +108,8 @@ public class ResultNLG {
 
         // RISPOSTA COMPLETAMENTE ESATTA
         // riguardo a questo argomento hai risposto in maniera precisa e coimpleta quindi hai ottenuto il punteggio massimo
-
+        // RISPOSTA CON QUALCHE 0
+        // Nella tua risposta non mi hai parlato di {} quindi sei stato penalizzato
         // RISPOSTA PARZIALMENTE ESATTA 0.6
         // Nella tua risposta mi hai parlato di { } solo dopo che ti ho fatto ulteriori domande, per questo sei stato penalizzato nel punteggio
    
@@ -360,7 +361,50 @@ public class ResultNLG {
         // Realize the sentence
         output = realiser.realiseSentence(cord5);
         System.out.println(output);
+
+
+        //RISPOTA CON QUALCHE 0
+        SPhraseSpec mainClause10 = factory.createClause();
+        mainClause10.setSubject("tu");
+        mainClause10.setVerb("parlare");
+        CoordinatedPhraseElement obj10 = factory.createCoordinatedPhrase();
+        obj10.addCoordinate("di grammatica");
+        obj10.addCoordinate("regole");
+        obj10.addCoordinate("probabilità");
+        mainClause10.setObject(obj10);
+        mainClause10.addFrontModifier("Nella tua risposta");
+        mainClause10.setFeature(Feature.TENSE, Tense.PAST);
+        mainClause10.setFeature(Feature.PERFECT, true);
+        mainClause10.setFeature(Feature.NEGATED, true);
+
+        // Frase subordinata
+        SPhraseSpec subClause10 = factory.createClause();
+        subClause10.setSubject("tu");
+        subClause10.setVerb("essere");
+        subClause10.setObject("penalizzato");
+        subClause10.setFeature(Feature.TENSE, Tense.PAST);
+        subClause10.setFeature(Feature.PERFECT, true);
+
+        // Coordinare le frasi
+        CoordinatedPhraseElement coordinatedPhrase10 = factory.createCoordinatedPhrase();
+        coordinatedPhrase10.addCoordinate(mainClause10);
+        coordinatedPhrase10.addCoordinate(subClause10);
+        coordinatedPhrase10.setConjunction("perciò");
+
+
+        // Realizzare la frase finale
+        output = realiser.realiseSentence(coordinatedPhrase10);
+        System.out.println(output);
         
+
+
+        SPhraseSpec mainClause6 = factory.createClause();
+        mainClause6.setSubject("tu");
+        mainClause6.setVerb("prendere");
+        mainClause6.setObject("8/10 punti");
+        mainClause6.setComplement("per l'argomento NLG");
+        mainClause6.setFeature(Feature.TENSE, Tense.PAST);
+        mainClause6.setFeature(Feature.PERFECT, true);
 
     }
 
