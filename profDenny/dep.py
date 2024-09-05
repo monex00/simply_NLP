@@ -20,7 +20,8 @@ def udipipe_api(text):
 def execute_subcommand(text, intention):
     application="java"
     # print(text)
-    result = subprocess.run([application,"-cp", "./simpleNLG-IT/simplenlg-it.jar", "./simpleNLG-IT/SimpleNlgProxyLoris.java", text, intention], stdout=subprocess.PIPE)
+    stringifyText = json.dumps(text)
+    result = subprocess.run([application,"-cp", "./simpleNLG-IT/simplenlg-it.jar:./simpleNLG-IT/json-20240303.jar", "./simpleNLG-IT/GenerateQuestion.java", stringifyText, intention], stdout=subprocess.PIPE)
     output = result.stdout.decode('utf-8')
     return output
 
@@ -128,7 +129,7 @@ class FillQuestion:
         return q
 
     def __str__(self):
-        return "\t\t\tQuestion: " + self.question + "\n\t\t\tTrigger: " + self.trigger  + "\n\t\t\tIntention: " + str(self.intention)
+        return "\t\t\tQuestion: " + json.dumps(self.question) + "\n\t\t\tTrigger: " + self.trigger  + "\n\t\t\tIntention: " + str(self.intention)
 
 
 class RequiredWord:
@@ -408,6 +409,8 @@ def preprocess_answer(tokens, frame, record, index_record):
                 trigger = trigger[:slot_index] + '0' + trigger[slot_index + 1:]
                 required_slot.add_fill_question_front(FillQuestion("Per " + token.lemma + " intendi " + required_slot.lemma + "?", trigger, ["MISSPELL"]))
                 in_required = True
+            elif distance == 0:
+                in_required = True
             for dep in required_slot.dependencies:
                 distance = levenshtein_distance(token.lemma, dep.to)
                 if distance <= 2 and distance > 0:
@@ -415,6 +418,9 @@ def preprocess_answer(tokens, frame, record, index_record):
                     trigger = trigger[:slot_index] + '1' + trigger[slot_index + 1:]
                     dep.add_fill_question_front(FillQuestion("Per " + token.lemma + " intendi " + dep.to + "?", trigger, ["MISSPELL"]))
                     in_required = True
+                elif distance == 0:
+                    in_required = True
+                    
 
 
         if not in_required:
@@ -447,7 +453,7 @@ def main():
         frame = Frame(json_frame['question'], json_frame['answer'], json_frame['name'], json_frame['domain'])
         
         for required_slot in json_frame['required']: # each required slot
-            req = RequiredWord(required_slot['lemma'], required_slot['weight'])
+            req = RequiredWord(required_slot['lemma'].lower(), required_slot['weight'])
             
 
             for question in required_slot['fill_questions']: # each question in the required slot
@@ -468,27 +474,29 @@ def main():
     print(frames[1])
 
 
-    number_of_questions = 1
-
+    number_of_questions = 5
+    
     total_score = 0
 
 
-    for i in range(0,number_of_questions):
+    for i in range(0, number_of_questions):
+        i = 1
         record = Record()
-        record.add_word(0 , frames[1].name)
-        text = input(frames[1].question + "\n")
+        record.add_word(0 , frames[i].name)
+        text = input(frames[i].question + "\n")
+        text = text.lower()
         answer_dependencies = get_dependencies(text)
        
-        # history.add_record(frames[1].name, Record("fill", frames[1].question, text))
-        for k in range(0,len(frames[1].required_slots)):
-            record.add_word(k + 1, frames[1].required_slots[k].lemma)
+        # history.add_record(frames[i].name, Record("fill", frames[i].question, text))
+        for k in range(0,len(frames[i].required_slots)):
+            record.add_word(k + 1, frames[i].required_slots[k].lemma)
 
             
-        preproc = preprocess_answer(answer_dependencies, frames[1], record, 0)
-        fill_frame(frames[1], answer_dependencies, '', record, 0)
-        while (frames[1].check_frame() == False):
+        preproc = preprocess_answer(answer_dependencies, frames[i], record, 0)
+        fill_frame(frames[i], answer_dependencies, '', record, 0)
+        while (frames[i].check_frame() == False):
             print("Frame not complete")
-            question, dep, slot, removed_intention, dep_slot = frames[1].get_fill_questions()
+            question, dep, slot, removed_intention, dep_slot = frames[i].get_fill_questions()
 
             if question is None:
                 print("GG")
@@ -499,24 +507,25 @@ def main():
                 question = "Non hai centrato l'argomento. " +  question #TODO: create a constant array of messages
             
             if slot is not None:
-                slot_index = frames[1].required_slots.index(slot)
+                slot_index = frames[i].required_slots.index(slot)
                 j = slot_index + 1
             else:
-                slot_index = frames[1].required_slots.index(dep_slot)
+                slot_index = frames[i].required_slots.index(dep_slot)
                 j = slot_index + 1
 
             text = input(question + "\n")
-            # history.add_record(frames[1].name, Record("fill", question, text))
+            text = text.lower()
+            # history.add_record(frames[i].name, Record("fill", question, text))
             
             answer_dependencies = get_dependencies(text)
-            fill_frame(frames[1], answer_dependencies, removed_intention, record, j, slot, dep)
-            preproc = preprocess_answer(answer_dependencies, frames[1],record, j)
+            fill_frame(frames[i], answer_dependencies, removed_intention, record, j, slot, dep)
+            preproc = preprocess_answer(answer_dependencies, frames[i],record, j)
 
-        total_score += frames[1].get_final_score()
+        total_score += frames[i].get_final_score()
         record.set_score(0, total_score)
         history.add_record(record)
         print("record", record)
-        print(frames[1])
+        print(frames[i])
     print("Score: " + str(((total_score * 30) / number_of_questions)))
     
 

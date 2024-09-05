@@ -6,24 +6,202 @@
         "required": [
             {
                 "lemma": "Textplanning",
-                "fill_questions": [{"text": "Non manca una fase che viene prima di tutte le altre?", "intention": [],"trigger": "0**"}, {"text": "Qual'è la fase che si occupa della pianificazione del discorso e del contenuto?", "intention": [],"trigger": "0**"}],
-                "weight" : 0.3,
+                "fill_questions": [{"text": {"verb": "essere", "tense":"presente", "subject": "TextPlanning", "object": "la fase", "oagg": "primo", "ogender":"F", "sgender":"M"}, "intention": ["WHICH_SUBJECT", "YES_NO"],"trigger": "0**"}],
+                "weight" : 0.33,
                 "dependencies" : []
             },
             {
                 "lemma": "Sentenceplanning",
-                "fill_questions": [{"text": "Non manca una fase che si trova in mezzo alle altre?", "intention": [],"trigger": "*0*"}, {"text": "Qual'è la fase che si occupa della formazione delle frasi?", "intention": [],"trigger": "*0*"}],
-                "weight" : 0.3,
+                "fill_questions": [{"text": {"verb": "essere", "tense":"presente", "subject": "SentencePlanning", "object": "la fase", "oagg": "secondo", "ogender":"F", "sgender":"M"}, "intention": ["WHICH_SUBJECT", "YES_NO"],"trigger": "*0*"}],
+                "weight" : 0.33,
                 "dependencies" : []
             },
             {
                 "lemma": "Realization",
-                "fill_questions": [{"text": "Non manca una fase che viene dopo tutte le altre?", "intention": [],"trigger": "**0"}, {"text": "Qual'è la fase che si occupa ti trasformare il contenuto in testo grammaticalmente corretto?", "intention": [],"trigger": "**0"}],
-                "weight" : 0.3,
+                "fill_questions": [{"text": {"verb": "essere", "tense":"presente", "subject": "Realization", "object": "la fase", "oagg": "terzo", "ogender":"F", "sgender":"M"}, "intention": ["WHICH_SUBJECT", "YES_NO"],"trigger": "**0"}],
+                "weight" : 0.34,
                 "dependencies" : []
             }
         ],
-        "domain":[]
+        "domain": [
+            "NLG", "generazione", "linguaggio", 
+            "text planning", "sentence planning", 
+            "realization", "pianificazione", "testo", 
+            "frase", "sintesi", "linguistica", 
+            "template", "regola", "grammatica", 
+            "rappresentazione", "strutturazione", 
+            "informazione", "contenuto", "semantica", 
+            "sintassi", "superficie", "discorso", 
+            "coerenza", "coesione", "testualità", 
+            "microstruttura", "macrostruttura", 
+            "linearizzazione", "formalismo", 
+            "processo"
+        ]
+    },
+    {
+        "name": "POS tagging",
+        "question": "Cosa è il PoS Tagging?",
+        "answer": "il part-of-speech tagging è il processo di associare un tag a una parola in un testo come appartenente a una specifica parte del discorso.",
+        "required": [
+            {
+                "lemma": "Part-of-Speech",
+                "fill_questions": [{"text": {"verb": "significare", "tense":"presente", "subject": "POS", "object": "Part-of-Speech", "ogender":"M", "sgender":"M"}, "intention": ["WHAT_OBJECT", "YES_NO"], "trigger": "0**"}],
+                "weight" : 0.2,
+                "dependencies" : []
+            },
+            {
+                "lemma": "Tag",
+                "fill_questions": [{"text": {"verb": "associare", "tense":"passato prossimo", "subject": "le parole", "splural" : "T", "object": "un tag", "ogender":"M", "sgender":"F"}, "intention": ["WHAT_OBJECT", "YES_NO"], "trigger": "*0*"}],
+                "weight" : 0.2,
+                "dependencies" : []
+            },
+            {
+                "lemma": "parte",
+                "fill_questions": [{"text":{"verb": "identificare", "tense": "presente", "object": "una parte", "ocompl" : "del discorso" , "subject":"un tag", "sgender":"M", "ogender":"F"}, "intention": ["WHAT_OBJECT", "YES_NO"], "trigger": "**0"}],
+                "weight" : 0.2,
+                "dependencies" : [
+                    {
+                        "to": "discorso",
+                        "type": "nmod",
+                        "fill_questions": [{"text":{"verb": "essere", "tense": "presente", "object": "del discorso", "subject":"parte", "sgender":"F", "ogender":"M"}, "intention": ["WHICH_OBJECT"], "trigger": "**1"},{"text":{"verb": "essere", "tense": "presente", "object": "del discorso", "subject":"parte", "sgender":"F", "ogender":"M"}, "intention": ["YES_NO"], "trigger": "**1"}],
+                        "weight" : 0.2
+                    }
+                ]
+            }            
+        ],
+        "domain": [
+            "PoS", "tagging", "part-of-speech", "processo",
+            "annotazione", "parola", "testo", 
+            "corpus", "parte", "discorso", 
+            "etichettatura", "grammatica", "categoria", 
+            "NLP", "linguaggio", "naturale", 
+            "sintassi", "lessico", "token", 
+            "tokens", "analisi", "morfologia", 
+            "elaborazione", "linguistica", "computazionale", 
+            "modello", "regola", "dizionario"
+        ]
+    },
+    {
+        "name": "sintassi a dipendenze o costituenti",
+        "question": "Che differenza c'è tra la sintassi formalizzata come dipendenze o come costituenti?",
+        "answer": "La differenza principale è che la sintassi a dipendenze rappresenta la struttura di una frase tramite relazioni dirette tra le parole, mentre la sintassi a costituenti è organizzata in sottoinsiemi gerarchici di parole.",
+        "required": [
+            {
+                "lemma": "sottoinsiemi",
+                "fill_questions": [{"text": {"verb": "raggruppare", "tense":"presente", "object": "le parole","ocompl": "in una sintassi a costituenti",  "subject": "noi", "oplural" : "T", "ogender":"F", "sgender":"F"}, "intention": ["HOW"], "trigger": "0*"}],
+                "weight" : 0.2,
+                "dependencies" : [
+                    {
+                        "to": "gerarchici",
+                        "type": "amod",
+                        "fill_questions": [{"text":{"tense": "presente", "scompl": "di sottoinsiemi", "subject":"tipologia", "sgender":"F", "ogender":"M"}, "intention": ["WHICH"], "trigger": "1*"}],
+                        "weight" : 0.2
+                    },
+                    {
+                        "to": "parole",
+                        "type": "nmod",
+                        "fill_questions": [{"text":{"tense": "presente","passive": "T", "verb": "formare", "object": "i sottoinsiemi", "subject":"le parole", "splural":"T","oplural":"T", "sgender":"F", "ogender":"M"}, "intention": ["WHAT_SUBJECT", "YES_NO"], "trigger": "1*"}],
+                        "weight" : 0.1
+                    }
+                ]
+            },
+            {
+                "lemma": "relazioni",
+                "fill_questions": [{"text": {"perfect": "T","auxessere": "T","verb": "reppresentare", "tense":"presente", "subject": "la struttura", "splural" : "T", "object": "", "scompl" : "della frase nella sintassi a dipendenze", "ogender":"F", "sgender":"F"}, "intention": ["HOW"], "trigger": "*0"}],
+                "weight" : 0.2,
+                "dependencies" : [
+                    {
+                        "to": "dirette",
+                        "type": "amod",
+                        "fill_questions": [{"text":{"tense": "presente", "scompl": "di relazioni", "subject":"tipologia", "sgender":"F", "ogender":"M"}, "intention": ["WH_WHICH"], "trigger": "*1"}],
+                        "weight" : 0.2
+                    },
+                    {
+                        "to": "parole",
+                        "type": "nmod",
+                        "fill_questions": [{"text":"tra cosa sono formate le relazioni", "intention": [], "trigger": "*1"}],
+                        "weight" : 0.1
+                    }
+                ]
+            }            
+        ],
+        "domain": [
+            "sintassi", "dipendenze", "costituenti", 
+            "differenza", "struttura", "frase", 
+            "relazioni", "parole", "sottoinsiemi", 
+            "gerarchia", "analisi", "albero", 
+            "grammatica", "linguistica", "modello", 
+            "rappresentazione", "parsing", "sintattico", 
+            "componente", "connettivo", 
+            "elemento", "connessione",
+            "dipendente", "nodo", "ramo", "grafo"
+        ]
+    },
+    {
+        "name": "DialogSistem",
+        "question": "Quali sono i 6 fenomeni notevoli del dialogo tra umani?",
+        "answer": "I sei fenomeni sono turns, speech-acts, grounding, dialog-structure, initiative, implicature",
+        "required": [
+            {
+                "lemma": "Turns",
+                "fill_questions": [{"text": "come si chiama il fenomeno dello scambio di turni di parola?", "intention": [], "trigger": "0*"}],
+                "weight" : 0.17,
+                "dependencies" : [
+                ]
+            },
+            {
+                "lemma": "Speech-acts",
+                "fill_questions": [{"text":"cosa sono costantives e directives?", "intention": [], "trigger": "*0"}],
+                "weight" : 0.17,
+                "dependencies" : [
+            
+                ]
+            },
+            {
+                "lemma": "Grounding",
+                "fill_questions": [{"text": "come si matiene il filo del discorso?", "intention": [], "trigger": "*0"}],
+                "weight" : 0.17,
+                "dependencies" : [
+            
+                ]
+            },
+            {
+                "lemma": "Dialog-structure",
+                "fill_questions": [{"text": "come si chiama la struttura tra speech-acts?", "intention": [], "trigger": "*0"}],
+                "weight" : 0.17,
+                "dependencies" : [
+            
+                ]
+            },
+            {
+                "lemma": "Initiative",
+                "fill_questions": [{"text": "durante una conversazione solitamente un interlocutore dirige il discorso, come si chiama questo fenomeno?", "intention": [], "trigger": "****0*"}],
+                "weight" : 0.16,
+                "dependencies" : [
+            
+                ]
+            },
+            {
+                "lemma": "implicature",
+                "fill_questions": [{"text": "come si chiama il fenomeno per il quali parti del discorso vengono omesse? ", "intention": [], "trigger": "*****0"}],
+                "weight" : 0.16,
+                "dependencies" : [
+            
+                ]
+            }
+
+        ],
+        "domain": [
+            "sintassi", "dipendenze", "costituenti", 
+            "differenza", "struttura", "frase", 
+            "relazioni", "parole", "sottoinsiemi", 
+            "gerarchia", "analisi", "albero", 
+            "grammatica", "linguistica", "modello", 
+            "rappresentazione", "parsing", "sintattico", 
+            "componente", "connettivo", 
+            "elemento", "connessione",
+            "dipendente", "nodo", "ramo", "grafo"
+        ]
     },
     {
         "name": "PCFG",
@@ -33,14 +211,14 @@
             {
                 "lemma": "grammatica",
                 "fill_questions": [
-                    {"text":"Una cgf è una grammatica", "intention": ["WHAT_OBJECT", "YES_NO"], "trigger": "0**"}
+                    {"text":{"verb": "essere", "tense":"presente", "subject": "una cfg", "object": "una grammatica", "sgender":"F", "ogender":"F"}, "intention": ["WHAT_OBJECT", "YES_NO"], "trigger": "0**"}
                 ],
                 "weight" : 0.3,
                 "dependencies" : []
             },
             {
                 "lemma": "regola",
-                "fill_questions": [{"text":"Le regole caratterizzano una grammatica", "intention": ["WHAT_SUBJECT"], "trigger": "*0*"}],
+                "fill_questions": [{"text":{"verb": "caratterizzare", "tense": "passivo", "object": "le regole", "subject":"una grammatica", "sgender":"F", "ogender":"F"}, "intention": ["WHAT_SUBJECT"], "trigger": "*0*"}],
                 "weight" : 0.3,
                 "dependencies" : [
                     {
@@ -54,7 +232,7 @@
             {
                 "lemma": "probabilità",
                 "fill_questions": [
-                    {"text":"Ogni regola ha associata una probabilità", "intention":["WHAT_OBJECT", "YES_NO"], "trigger": "*10"}
+                    {"text":{"verb":"associare", "tense":"passato prossimo", "object":"uno probabilità", "subject": "ogni regola",  "sgender":"F", "ogender":"F"}, "intention":["WHAT_OBJECT", "YES_NO"], "trigger": "*10"}
                 ],
                 "weight" : 0.3,
                 "dependencies" : []
@@ -71,6 +249,8 @@
             "likelihood", "verosimiglianza", "misura", 
             "valore", "atteso", "peso", "fattore"
         ]
+
+        
     }
 ]
 
