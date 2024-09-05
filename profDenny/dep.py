@@ -112,7 +112,7 @@ class Token:
         self.children.append(child)
 
     def __str__(self):
-        return self.form
+        return "ID: " + self.id + "\nForm: " + self.form + "\nLemma: " + self.lemma + "\nPOS: " + self.pos + "\nXPOS: " + self.xpos + "\nFeats: " + self.feats + "\nDep: " + self.dep + "\nDeps: " + self.deps + "\nMisc: " + self.misc
         
 
 class FillQuestion:
@@ -122,7 +122,7 @@ class FillQuestion:
         self.trigger = trigger
 
     def realize_question(self):
-        print(self.intention)
+        #print(self.intention)
         if len(self.intention) == 0 or self.intention[0] == "MISSPELL":
             return self.question
         q = execute_subcommand(self.question, self.intention[0])
@@ -210,7 +210,7 @@ class Frame:
         self.answer = answer
         self.state = ""
         self.required_slots = []
-        self.retries = 0
+        self.retries = 100
         self.domain = domain
         self.out_context_words = []
 
@@ -305,7 +305,6 @@ def get_dependencies(text):
     for row in data:
         if(len(row) < 10):
             continue
-        
         if(row[6]=='_'):
             continue
         head_index = int(row[6])
@@ -317,9 +316,9 @@ def get_dependencies(text):
         else:
             if head_index not in token_dict:
                 head = Token(data[head_index - 1][0], data[head_index - 1][1], data[head_index - 1][2], data[head_index - 1][3], data[head_index - 1][4], data[head_index - 1][5], data[head_index - 1][6], data[head_index - 1][7], data[head_index - 1][8], data[head_index - 1][9])
-                token_dict[head_index] = head
+                token_dict[int(data[head_index - 1][0])] = head
             else:
-                head = token_dict[head_index]
+                head = token_dict[int(data[head_index - 1][0])]
 
         token = None
         if int(row[0]) in token_dict:
@@ -471,7 +470,7 @@ def main():
         frames.append(frame)
         
     
-    print(frames[1])
+    #print(frames[1])
 
 
     number_of_questions = 5
@@ -480,10 +479,9 @@ def main():
 
 
     for i in range(0, number_of_questions):
-        i = 1
         record = Record()
         record.add_word(0 , frames[i].name)
-        text = input(frames[i].question + "\n")
+        text = input("\nProf. Danny: " + frames[i].question + "\n")
         text = text.lower()
         answer_dependencies = get_dependencies(text)
        
@@ -495,16 +493,16 @@ def main():
         preproc = preprocess_answer(answer_dependencies, frames[i], record, 0)
         fill_frame(frames[i], answer_dependencies, '', record, 0)
         while (frames[i].check_frame() == False):
-            print("Frame not complete")
+            #print("Frame not complete")
             question, dep, slot, removed_intention, dep_slot = frames[i].get_fill_questions()
 
             if question is None:
-                print("GG")
                 if not preproc:
-                    print("Non hai centrato l'argomento. Andiamo avanti...")
+                    print("\nProf. Danny: Non hai centrato l'argomento. Andiamo avanti...\n")
+                   
                 break
             if not preproc:
-                question = "Non hai centrato l'argomento. " +  question #TODO: create a constant array of messages
+                question = "\nProf. Danny: Non hai centrato l'argomento. " +  question + "\n" #TODO: create a constant array of messages
             
             if slot is not None:
                 slot_index = frames[i].required_slots.index(slot)
@@ -513,18 +511,21 @@ def main():
                 slot_index = frames[i].required_slots.index(dep_slot)
                 j = slot_index + 1
 
-            text = input(question + "\n")
+            text = input("\nProf. Danny: " + question + "\n")
             text = text.lower()
             # history.add_record(frames[i].name, Record("fill", question, text))
             
             answer_dependencies = get_dependencies(text)
             fill_frame(frames[i], answer_dependencies, removed_intention, record, j, slot, dep)
             preproc = preprocess_answer(answer_dependencies, frames[i],record, j)
+        
+        if(frames[i].retries == 0):
+             print("\nProf. Danny: Mi sembra che questo argomento non ti sia troppo chiaro. Proviamo con altro...\n")
 
         total_score += frames[i].get_final_score()
         record.set_score(0, total_score)
         history.add_record(record)
-        print("record", record)
+        #print("record", record)
         print(frames[i])
     print("Score: " + str(((total_score * 30) / number_of_questions)))
     

@@ -2,6 +2,10 @@ import simplenlg.features.*;
 import simplenlg.framework.*;
 import simplenlg.features.italian.*;
 import java.util.List;
+
+import javax.xml.catalog.CatalogFeatures.Feature;
+
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import simplenlg.realiser.Realiser;
 import simplenlg.lexicon.italian.ITXMLLexicon;
@@ -198,6 +202,8 @@ class Record {
         Realiser realiser = new Realiser();
 
         String output = "";
+
+        Float voto = 0.0f;
 
         
         for(int j = 0; j < records.size(); j++){
@@ -529,9 +535,19 @@ class Record {
     cord5.addCoordinate(mainClause2);
     cord5.addCoordinate(mainClause1);
     cord5.setConjunction("");
-    output += "\n" + realiser.realiseSentence(cord5);
-    System.out.println(output);
+    output += realiser.realiseSentence(cord5) + "\n";
+
+    voto += record.getScore().get(0) * (30/records.size());
     }
+    
+    SPhraseSpec mainClause10 = factory.createClause();
+    mainClause10.setSubject("tu");
+    mainClause10.setVerb("totalizzare");
+    mainClause10.setObject(voto  + "/30 punti");
+    mainClause10.setFeature(Feature.TENSE, Tense.PAST);
+    mainClause10.setFeature(Feature.PERFECT, true);
+    output = realiser.realiseSentence(mainClause10) + "\n";
+    System.out.println(output);
 }
 
 }

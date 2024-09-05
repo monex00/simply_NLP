@@ -50,7 +50,7 @@
                 "dependencies" : []
             },
             {
-                "lemma": "Tag",
+                "lemma": "tag",
                 "fill_questions": [{"text": {"verb": "associare", "tense":"passato prossimo", "subject": "le parole", "splural" : "T", "object": "un tag", "ogender":"M", "sgender":"F"}, "intention": ["WHAT_OBJECT", "YES_NO"], "trigger": "*0*"}],
                 "weight" : 0.2,
                 "dependencies" : []
@@ -87,18 +87,18 @@
         "answer": "La differenza principale è che la sintassi a dipendenze rappresenta la struttura di una frase tramite relazioni dirette tra le parole, mentre la sintassi a costituenti è organizzata in sottoinsiemi gerarchici di parole.",
         "required": [
             {
-                "lemma": "sottoinsiemi",
+                "lemma": "sottoinsieme",
                 "fill_questions": [{"text": {"verb": "raggruppare", "tense":"presente", "object": "le parole","ocompl": "in una sintassi a costituenti",  "subject": "noi", "oplural" : "T", "ogender":"F", "sgender":"F"}, "intention": ["HOW"], "trigger": "0*"}],
                 "weight" : 0.2,
                 "dependencies" : [
                     {
-                        "to": "gerarchici",
+                        "to": "gerarchico",
                         "type": "amod",
-                        "fill_questions": [{"text":{"tense": "presente", "scompl": "di sottoinsiemi", "subject":"tipologia", "sgender":"F", "ogender":"M"}, "intention": ["WHICH"], "trigger": "1*"}],
+                        "fill_questions": [{"text":{"tense": "presente", "scompl": "di sottoinsiemi", "subject":"tipologia", "sgender":"F", "ogender":"M"}, "intention": ["WH_WHICH"], "trigger": "1*"}],
                         "weight" : 0.2
                     },
                     {
-                        "to": "parole",
+                        "to": "parola",
                         "type": "nmod",
                         "fill_questions": [{"text":{"tense": "presente","passive": "T", "verb": "formare", "object": "i sottoinsiemi", "subject":"le parole", "splural":"T","oplural":"T", "sgender":"F", "ogender":"M"}, "intention": ["WHAT_SUBJECT", "YES_NO"], "trigger": "1*"}],
                         "weight" : 0.1
@@ -106,20 +106,20 @@
                 ]
             },
             {
-                "lemma": "relazioni",
+                "lemma": "relazione",
                 "fill_questions": [{"text": {"perfect": "T","auxessere": "T","verb": "reppresentare", "tense":"presente", "subject": "la struttura", "splural" : "T", "object": "", "scompl" : "della frase nella sintassi a dipendenze", "ogender":"F", "sgender":"F"}, "intention": ["HOW"], "trigger": "*0"}],
                 "weight" : 0.2,
                 "dependencies" : [
                     {
-                        "to": "dirette",
+                        "to": "diretto",
                         "type": "amod",
                         "fill_questions": [{"text":{"tense": "presente", "scompl": "di relazioni", "subject":"tipologia", "sgender":"F", "ogender":"M"}, "intention": ["WH_WHICH"], "trigger": "*1"}],
                         "weight" : 0.2
                     },
                     {
-                        "to": "parole",
+                        "to": "parola",
                         "type": "nmod",
-                        "fill_questions": [{"text":"tra cosa sono formate le relazioni", "intention": [], "trigger": "*1"}],
+                        "fill_questions": [{"text":"Tra cosa sono formate le relazioni", "intention": [], "trigger": "*1"}],
                         "weight" : 0.1
                     }
                 ]
@@ -144,14 +144,14 @@
         "required": [
             {
                 "lemma": "Turns",
-                "fill_questions": [{"text": "come si chiama il fenomeno dello scambio di turni di parola?", "intention": [], "trigger": "0*"}],
+                "fill_questions": [{"text": "Come si chiama il fenomeno dello scambio di turni di parola?", "intention": [], "trigger": "0*"}],
                 "weight" : 0.17,
                 "dependencies" : [
                 ]
             },
             {
                 "lemma": "Speech-acts",
-                "fill_questions": [{"text":"cosa sono costantives e directives?", "intention": [], "trigger": "*0"}],
+                "fill_questions": [{"text":"Cosa sono costantives e directives?", "intention": [], "trigger": "*0"}],
                 "weight" : 0.17,
                 "dependencies" : [
             
@@ -159,7 +159,7 @@
             },
             {
                 "lemma": "Grounding",
-                "fill_questions": [{"text": "come si matiene il filo del discorso?", "intention": [], "trigger": "*0"}],
+                "fill_questions": [{"text": "Come si matiene il filo del discorso?", "intention": [], "trigger": "*0"}],
                 "weight" : 0.17,
                 "dependencies" : [
             
@@ -167,7 +167,7 @@
             },
             {
                 "lemma": "Dialog-structure",
-                "fill_questions": [{"text": "come si chiama la struttura tra speech-acts?", "intention": [], "trigger": "*0"}],
+                "fill_questions": [{"text": "Come si chiama la struttura tra speech-acts?", "intention": [], "trigger": "*0"}],
                 "weight" : 0.17,
                 "dependencies" : [
             
@@ -175,15 +175,15 @@
             },
             {
                 "lemma": "Initiative",
-                "fill_questions": [{"text": "durante una conversazione solitamente un interlocutore dirige il discorso, come si chiama questo fenomeno?", "intention": [], "trigger": "****0*"}],
+                "fill_questions": [{"text": "Durante una conversazione solitamente un interlocutore dirige il discorso, come si chiama questo fenomeno?", "intention": [], "trigger": "****0*"}],
                 "weight" : 0.16,
                 "dependencies" : [
             
                 ]
             },
             {
-                "lemma": "implicature",
-                "fill_questions": [{"text": "come si chiama il fenomeno per il quali parti del discorso vengono omesse? ", "intention": [], "trigger": "*****0"}],
+                "lemma": "Implicature",
+                "fill_questions": [{"text": "Come si chiama il fenomeno per il quali parti del discorso vengono omesse? ", "intention": [], "trigger": "*****0"}],
                 "weight" : 0.16,
                 "dependencies" : [
             
@@ -218,7 +218,7 @@
             },
             {
                 "lemma": "regola",
-                "fill_questions": [{"text":{"verb": "caratterizzare", "tense": "passivo", "object": "le regole", "subject":"una grammatica", "sgender":"F", "ogender":"F"}, "intention": ["WHAT_SUBJECT"], "trigger": "*0*"}],
+                "fill_questions": [{"text":{"verb": "caratterizzare", "tense": "passivo", "object": "una grammatica", "subject":"le regole", "sgender":"F", "ogender":"F"}, "intention": ["WHAT_SUBJECT"], "trigger": "*0*"}],
                 "weight" : 0.3,
                 "dependencies" : [
                     {
