@@ -272,10 +272,10 @@ class Frame:
 
         """ out of context """
         for _ in self.out_context_words:
-            if(score - ((1 / tot_req) / 2) < 0):
+            if(score - ((1 / tot_req) / 4) < 0):
                 return 0 
             else:
-                score -= (1 / tot_req) / 2
+                score -= (1 / tot_req) / 4
         return score
     
     def get_fill_questions(self):
@@ -457,7 +457,6 @@ def preprocess_answer(tokens, frame, record, index_record):
                 if min_dist > 2: # TODO: CREATE COSTANT OR CHANGE IT
                     frame.add_out_context_word(token.lemma)
                     record.add_out_context(index_record, token.lemma)
-                    print("\n" + token.lemma + " è fuori contesto\n")
                     return False
     return True
 
@@ -494,7 +493,7 @@ def main():
     #print(frames[1])
 
 
-    number_of_questions = 5
+    number_of_questions = 1
     
     total_score = 0
 
@@ -523,7 +522,7 @@ def main():
                    
                 break
             if not preproc:
-                question = "\nProf. Danny: Non hai centrato l'argomento. " +  question + "\n" #TODO: create a constant array of messages
+                question = "Non hai centrato l'argomento. " +  question + "\n" #TODO: create a constant array of messages
             
             if slot is not None:
                 slot_index = frames[i].required_slots.index(slot)
@@ -545,6 +544,7 @@ def main():
         total_score += frames[i].get_final_score()
         record.set_score(0, frames[i].get_final_score())
         history.add_record(record)
+        print(record)
         #print(frames[i])
     #print("Score PYTHON: " + str(((total_score * 30) / number_of_questions)))
     
