@@ -4,10 +4,11 @@ from nltk.corpus import wordnet as wn
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import re
+import json
+import os
 
 import spacy
 from pprint import pprint
-from fn_mappings_by_hand import mappings_by_hand
 
 
 # Scaricare i dataset richiesti
@@ -92,6 +93,7 @@ def _eq(obj1, obj2):
 def accuracy_score(mappings1, mappings2):
     corrects, count = 0, 0
     for frame_name in mappings1:
+
         corrects += (mappings1[frame_name]['title'] == mappings2[frame_name]['title']) +\
                     sum(_eq(mappings1[frame_name]['FEs'][fe], mappings2[frame_name]['FEs'][fe]) for fe in mappings1[frame_name]['FEs']) +\
                     sum(_eq(mappings1[frame_name]['LUs'][lu], mappings2[frame_name]['LUs'][lu]) for lu in mappings1[frame_name]['LUs'])
@@ -125,38 +127,62 @@ def map_frame_to_synsets(frame, nlp):
 
     return mapping
 
-
-# Esempio di utilizzo
-# frames = getFrameSetForStudent("Mario Rossi")
-# results = {}
-# 
-# for frame in frames:
-#     results[frame.name] = map_frame_to_synsets(frame, depth=1)  # Profondità opzionale
-# 
-# # Output dei risultati
-# for frame_name, mapping in results.items():
-#     print(f"Frame: {frame_name}")
-#     print("Title Synset:", mapping['title'].name() if mapping['title'] else "None")
-#     print("Frame Elements:")
-#     for fe_name, fe_synset in mapping['FEs'].items():
-#         print(f"  {fe_name}: {fe_synset.name() if fe_synset else 'None'}")
-#     print("Lexical Units:")
-#     for lu_name, lu_synset in mapping['LUs'].items():
-#         print(f"  {lu_name}: {lu_synset.name() if lu_synset else 'None'}")
-#     print()
+def load_mapping_from_file(filename):
+    if os.path.exists(filename):
+        with open(filename, 'r') as f:
+            data = json.load(f)
+        # Convertire le stringhe Synset in oggetti Synset
+        for frame_name in data:
+            if data[frame_name]["title"] != "None":
+                data[frame_name]["title"] = wn.synset(data[frame_name]["title"])
+            else:
+                data[frame_name]["title"] = None
+            for fe_name in data[frame_name]["FEs"]:
+                if data[frame_name]["FEs"][fe_name] != "None" :
+                    data[frame_name]["FEs"][fe_name] = wn.synset(data[frame_name]["FEs"][fe_name])
+                else:
+                    data[frame_name]["FEs"][fe_name] = None
+            for lu_name in data[frame_name]["LUs"]:
+                if data[frame_name]["LUs"][lu_name] != "None":
+                    data[frame_name]["LUs"][lu_name] = wn.synset(data[frame_name]["LUs"][lu_name])
+                else:
+                    data[frame_name]["LUs"][lu_name] = None
+        return data
+    print("File not found")
+    return {}
 
 def main():
-    
     nlp = spacy.load('en_core_web_sm')
-    andrea_frames = {'Touring': 1907, 'Cause_fluidic_motion': 920, 'Submitting_documents': 1521, 'Appellations': 2390, 'Evidence': 25}
-    fabio_frames = {'Strictness': 75, 'Being_pregnant': 2921, 'Sex': 2913, 'Wearing': 160, 'Dominate_situation': 1795}
-
-    mappings = {frame_name: map_frame_to_synsets(fn.frame(frame_id), nlp)
-            for frame_name, frame_id in (andrea_frames | fabio_frames).items()}
-
-    pprint(mappings, indent=1, sort_dicts=False)
+    simone_frames = {'Part_piece': 142, 'Spatial_co-location': 2905, 'Mental_stimulus_stimulus_focus': 2046, 'Reasoning': 308, 'Avoiding': 274}
+    loris_frames = {'Ground_up': 357, 'Piracy': 123, 'Fire_burning': 2824, 'Location_in_time': 2141, 'Speed_description': 966}
+    mattia_frames = {'Conduct': 491, 'Holding_off_on': 1576, 'Chemical-sense_description': 271, 'Endeavor_failure': 2622, 'Physical_artworks': 1656}
     
-    print(f"Accuracy: {round(accuracy_score(mappings, mappings_by_hand) * 100, 2)}%")
+    mappings_global = {frame_name: map_frame_to_synsets(fn.frame(frame_id), nlp)
+            for frame_name, frame_id in (simone_frames | loris_frames | mattia_frames).items()} 
+    mapping_simo = {frame_name: map_frame_to_synsets(fn.frame(frame_id), nlp)
+            for frame_name, frame_id in simone_frames.items()}
+    
+    mapping_loris = {frame_name: map_frame_to_synsets(fn.frame(frame_id), nlp)
+            for frame_name, frame_id in loris_frames.items()}
+    
+    mapping_mattia = {frame_name: map_frame_to_synsets(fn.frame(frame_id), nlp)
+            for frame_name, frame_id in mattia_frames.items()}
+    
 
-if __name__ == "__main__":
-    main()
+    # pprint(mappings, indent=1, sort_dicts=False)
+
+    # load mapping by hand json 
+    mappings_by_hand_simo = load_mapping_from_file("mappings_hand_simo.json")
+    mappings_by_hand_loris = load_mapping_from_file("mappings_hand_loris.json")
+    mappings_by_hand_mattia = load_mapping_from_file("mappings_hand_mattia.json")
+    mappings_by_hand = {**mappings_by_hand_simo, **mappings_by_hand_loris, **mappings_by_hand_mattia} # merge dictionaries
+
+    # print(mappings_by_hand)
+    
+    print(f"Accuracy simo: {round(accuracy_score(mapping_simo, mappings_by_hand_simo) * 100, 2)}%")
+    print(f"Accuracy loris: {round(accuracy_score(mapping_loris, mappings_by_hand_loris) * 100, 2)}%")
+    print(f"Accuracy mattia: {round(accuracy_score(mapping_mattia, mappings_by_hand_mattia) * 100, 2)}%")
+    print(f"Accuracy global: {round(accuracy_score(mappings_global, mappings_by_hand) * 100, 2)}%")
+
+""" if __name__ == "__main__":
+    main() """

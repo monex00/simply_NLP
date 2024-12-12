@@ -1,0 +1,163 @@
+{
+  "Conduct": {
+    "title": "behave.v.02",
+    "FEs": {
+      "Agent": "agentive_role.n.01",
+      "Manner": "manner.n.01",
+      "Circumstances": "circumstance.n.01",
+      "Affected_party": "party.n.05",
+      "Explanation": "explanation.n.01",
+      "Time": "time.n.01",
+      "Place": "place.v.02",
+      "Means": "means.n.01",
+      "Domain": "sphere.n.01",
+      "Degree": "degree.n.01",
+      "Standard": "standard.n.01"
+    },
+    "LUs": {
+      "conduct.n": "behavior.n.01",
+      "deportment.n": "demeanor.n.01",
+      "behavior.n": "demeanor.n.01",
+      "comportment.n": "bearing.n.03",
+      "misbehave.v": "misbehave.v.01",
+      "misbehavior.n": "misbehavior.n.01",
+      "behave.v": "act.v.02",
+      "act.v": "act.v.02",
+      "act up.v": "act_up.v.01",
+      "bearing.n": "carriage.n.03",
+      "conduct.v": "conduct.v.02",
+      "carry oneself.v": "carry.v.02",
+      "demeanor.n": "demeanor.n.01",
+      "manner.n": "manner.n.03",
+      "way.n": "way.n.05"
+    }
+  },
+  "Holding_off_on": {
+    "title": "keep.v.01",
+    "FEs": {
+      "Agent": "agentive_role.n.01",
+      "Desirable_action": "action.n.02",
+      "Degree": "degree.n.01",
+      "Manner": "manner.n.01",
+      "Means": "means.n.01",
+      "Place": "topographic_point.n.01",
+      "Time": "time.n.02",
+      "Purpose": "purpose.n.01",
+      "Explanation": "explanation.n.01",
+      "Circumstances": "circumstance.n.01",
+      "Salient_entity": "entity.n.01",
+      "Duration": "duration.n.01",
+      "End_point": "resultant.n.01"
+    },
+    "LUs": {
+      "hold off.v": "hold_off.v.01",
+      "wait.v": "wait.v.02"
+    }
+  },
+  "Chemical-sense_description": {
+    "title": "description.n.01",
+    "FEs": {
+      "Perceptual_source": "source.n.04",
+      "Degree": "degree.n.01",
+      "Sensory_attribute": "attribute.n.02"
+    },
+    "LUs": {
+      "tasty.a": "tasty.a.01",
+      "piquant.a": "piquant.s.01",
+      "yummy.a": "delectable.s.01",
+      "flavourful.a": "flavorful.s.01",
+      "scrumptious.a": "delectable.s.01",
+      "palatable.a": "palatable.a.01",
+      "delectable.a": "delectable.s.01",
+      "flavoursome.a": "flavorful.s.01",
+      "toothsome.a": "delectable.s.01",
+      "ambrosial.a": "ambrosial.s.01",
+      "sapid.a": "flavorful.s.01",
+      "salty.a": "salty.a.02",
+      "sour.a": "sour.s.03",
+      "bitter.a": "bitter.s.06",
+      "spicy.a": "hot.s.09",
+      "sweet.a": "sweet.a.01",
+      "hot.a": "hot.s.09",
+      "savory.a": "piquant.s.01",
+      "delicious.a": "delectable.s.01",
+      "pungent.a": "pungent.s.01",
+      "tart.a": "lemony.s.01",
+      "flavourless.a": "bland.s.01",
+      "bland.a": "bland.s.01",
+      "insipid.a": "bland.s.01",
+      "unpalatable.a": "unpalatable.a.01",
+      "stench.n": "malodor.n.01",
+      "odor.n": "smell.n.01",
+      "reek.n": "malodor.n.01",
+      "reek.v": "reek.v.02",
+      "stink.n": "malodor.n.01",
+      "stink.v": "reek.v.02",
+      "aroma.n": "aroma.n.02",
+      "fragrance.n": "aroma.n.02",
+      "scent.n": "aroma.n.02",
+      "bouquet.n": "bouquet.n.02",
+      "smelly.a": "fetid.s.01",
+      "aromatic.a": "aromatic.s.02",
+      "fragrant.a": "fragrant.a.01",
+      "tasteless.a": "tasteless.a.01",
+      "malodorous.a": "malodorous.a.01",
+      "smell.v": "smell.v.03"
+    }
+  },
+  "Endeavor_failure": {
+    "title": "enterprise.n.01",
+    "FEs": {
+      "Endeavor": "enterprise.n.01",
+      "Explanation": "explanation.n.01",
+      "Time": "time.n.03",
+      "Place": "place.n.02",
+      "Circumstances": "circumstance.n.01",
+      "Manner": "manner.n.01",
+      "Containing_event": "hold.v.11",
+      "Depictive": "delineative.s.01",
+      "Degree": "degree.n.01",
+      "Means": "means.n.01"
+    },
+    "LUs": {
+      "fail.v": "fail.v.09",
+      "flop.v": "fall_through.v.01",
+      "collapse.v": "crumble.v.01",
+      "fold.v": "close_up.v.01",
+      "go under.v": "sink.v.04",
+      "go bust.v": "fail.v.04"
+    }
+  },
+  "Physical_artworks": {
+    "title": "artwork.n.01",
+    "FEs": {
+      "Artifact": "artifact.n.01",
+      "Use": "function.n.02",
+      "Creator": "creator.n.02",
+      "Time_of_creation": "time.n.01",
+      "Name": "name.n.01",
+      "Type": "type.n.01",
+      "Material": "material.n.01",
+      "Represented": "represent.v.01",
+      "State_of_represented": "represent.v.09",
+      "Descriptor": "descriptor.n.02",
+      "Place": "place.n.02"
+    },
+    "LUs": {
+      "photo.n": "photograph.n.01",
+      "photograph.n": "photograph.n.01",
+      "painting.n": "painting.n.02",
+      "picture.n": "picture.n.01",
+      "drawing.n": "drawing.n.02",
+      "statue.n": "statue.n.01",
+      "statuette.n": "figurine.n.01",
+      "bronze.n": "bronze.n.02",
+      "diagram.n": "diagram.n.01",
+      "sculpture.n": "sculpture.n.01",
+      "image.n": "picture.n.01",
+      "poster.n": "poster.n.01",
+      "trace.n": "tracing.n.02",
+      "tracing.n": "tracing.n.02"
+    }
+  }
+}

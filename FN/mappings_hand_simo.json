@@ -1,0 +1,141 @@
+{
+  "Part_piece": {
+    "title": "piece.n.08",
+    "FEs": {
+      "Piece": "piece.n.08",
+      "Piece_prop": "prop.n.01",
+      "Substance": "substance.n.01"
+    },
+    "LUs": {
+      "scrap.n": "scrap.n.03",
+      "sliver.n": "splinter.n.01",
+      "shred.n": "shred.n.01",
+      "snippet.n": "snip.n.01",
+      "hunk.n": "hunk.n.02",
+      "chunk.n": "ball.n.08",
+      "smidgen.n": "shred.n.01",
+      "chip.n": "bit.n.02",
+      "shard.n": "shard.n.01",
+      "morsel.n": "morsel.n.02",
+      "piece.n": "piece.n.01",
+      "slice.n": "piece.n.08",
+      "lump.n": "hunk.n.02",
+      "flake.n": "bit.n.02",
+      "fragment.n": "fragment.n.01",
+      "clump.n": "ball.n.08",
+      "clod.n": "ball.n.08",
+      "board [computer].n": "computer.n.01"
+    }
+  },
+  "Spatial_co-location": {
+    "title": "location.n.01",
+    "FEs": {
+      "Ground": "ground.n.08",
+      "Figure": "figure.n.11",
+      "Accessibility": "approachability.n.01",
+      "Direction": "direction.n.02",
+      "Time": "time.n.02",
+      "Deixis": "deixis.n.01",
+      "Directness": "directness.n.01",
+      "Temporal_profile": "profile.n.01"
+    },
+    "LUs": {
+      "here.adv": "here.n.01",
+      "where [relativizer].adv": "None",
+      "there.adv": "there.n.01",
+      "home.adv": "home.a.02",
+      "where [interrog].adv": "None",
+      "at.prep": "astatine.n.01"
+    }
+  },
+  "Mental_stimulus_stimulus_focus": {
+    "title": "concenter.v.01",
+    "FEs": {
+      "Experiencer": "None",
+      "Stimulus": "stimulation.n.02",
+      "Degree": "degree.n.01",
+      "Empathy_target": "aim.n.02",
+      "Explanation": "explanation.n.01",
+      "Circumstances": "circumstance.n.01",
+      "Parameter": "parameter.n.02",
+      "Manner": "manner.n.01",
+      "Time": "time.n.01",
+      "Frequency": "frequency.n.01"
+    },
+    "LUs": {
+      "interesting.a": "interesting.a.01",
+      "fascinating.a": "absorbing.s.01",
+      "enthralling.a": "bewitching.s.01",
+      "captivating.a": "bewitching.s.01",
+      "absorbing.a": "absorbing.s.01",
+      "engrossing.a": "absorbing.s.01"
+    }
+  },
+  "Reasoning": {
+    "title": "reasoning.n.01",
+    "FEs": {
+      "Content": "message.n.02",
+      "Medium": "medium.n.01",
+      "Arguer": "debater.n.01",
+      "Addressee": "addressee.n.01",
+      "Support": "support.n.03",
+      "Manner": "manner.n.01",
+      "Means": "means.n.01",
+      "Depictive": "delineative.s.01",
+      "Result": "consequence.n.01",
+      "Degree": "degree.n.01",
+      "Time": "time.n.01",
+      "Place": "place.n.02",
+      "Duration": "duration.n.01",
+      "Group": "group.n.01"
+    },
+    "LUs": {
+      "argue.v": "argue.v.03",
+      "prove.v": "prove.v.02",
+      "reason.v": "reason.v.03",
+      "demonstrate.v": "attest.v.01",
+      "show.v": "prove.v.02",
+      "disprove.v": "disprove.v.01",
+      "argument.n": "argument.n.01",
+      "polemic.n": "polemicist.n.01",
+      "case.n": "case.n.09",
+      "demonstration.n": "demonstration.n.05",
+      "reasoning.n": "reasoning.n.01"
+    }
+  },
+  "Avoiding": {
+    "title": "avoid.v.01",
+    "FEs": {
+      "Agent": "agentive_role.n.01",
+      "Place": "topographic_point.n.01",
+      "Time": "time.n.01",
+      "Purpose": "purpose.n.01",
+      "Undesirable_situation": "situation.n.03",
+      "Means": "means.n.01",
+      "Manner": "manner.n.01",
+      "Circumstances": "circumstance.n.01",
+      "Degree": "degree.n.01",
+      "Explanation": "explanation.n.01"
+    },
+    "LUs": {
+      "avoid.v": "avoid.v.01",
+      "evade.v": "evade.v.04",
+      "dodge.v": "dodge.v.01",
+      "duck.v": "hedge.v.01",
+      "escape.v": "escape.v.01",
+      "shirk.v": "fiddle.v.01",
+      "shun.v": "shun.v.01",
+      "sidestep.v": "hedge.v.01",
+      "skirt.v": "hedge.v.01",
+      "avoidance.n": "avoidance.n.01",
+      "sidestep.n": "sidestep.n.01",
+      "evasion.n": "evasion.n.04",
+      "eschew.v": "shun.v.01",
+      "forgo.v": "waive.v.01",
+      "shrink from.v": "fiddle.v.01",
+      "desist.v": "abstain.v.02",
+      "stay away.v": "stand_back.v.01",
+      "keep away.v": "keep_away.v.01"
+    }
+  }
+}

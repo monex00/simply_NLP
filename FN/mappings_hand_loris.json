@@ -1,0 +1,120 @@
+{
+    "Ground_up": {
+      "title": "land.n.04",
+      "FEs": { "Patient": "affected_role.n.01", "Result": "solution.n.02" },
+      "LUs": {
+        "pulverized.a": "powdered.s.01",
+        "ground.a": "None",
+        "crushed.a": "crushed.s.01",
+        "milled.a": "milled.s.01",
+        "grated.a": "None",
+        "flaked.a": "None",
+        "powdered.a": "powdered.s.01",
+        "shredded.a": "chopped.s.01",
+        "crumbled.a": "None",
+        "granulated.a": "granulated.s.01"
+      }
+    },
+    "Piracy": {
+      "title": "piracy.n.01",
+      "FEs": {
+        "Perpetrator": "perpetrator.n.01",
+        "Vehicle": "vehicle.n.01",
+        "Victim": "victim.n.01",
+        "Degree": "degree.n.01",
+        "Event": "event.n.01",
+        "Manner": "manner.n.01",
+        "Means": "means.n.01",
+        "Duration": "duration.n.01",
+        "Place": "topographic_point.n.01",
+        "Time": "time.n.01",
+        "Goal": "finish.n.04",
+        "Source": "beginning.n.04",
+        "Purpose": "purpose.n.01",
+        "Explanation": "explanation.n.02",
+        "Instrument": "instrumental_role.n.01",
+        "Frequency": "frequency.n.01"
+      },
+      "LUs": {
+        "hijack.v": "hijack.v.02",
+        "hijacking.n": "highjacking.n.01",
+        "hijacker.n": "highjacker.n.01",
+        "carjacking.n": "carjacking.n.01",
+        "hijacked.a": "None",
+        "piracy.n": "piracy.n.01",
+        "pirate.v": "commandeer.v.01",
+        "carjack.v": "carjack.v.01"
+      }
+    },
+    "Fire_burning": {
+      "title": "burn.v.07",
+      "FEs": {
+        "Place": "topographic_point.n.01",
+        "Time": "time.n.01",
+        "Fire": "fire.n.03",
+        "Fuel": "fuel.n.01",
+        "Manner": "manner.n.01",
+        "Name": "name.n.01",
+        "Duration": "duration.n.01",
+        "Depictive": "delineative.s.01",
+        "Result": "result.n.03",
+        "Subregion": "None"
+      },
+      "LUs": {
+        "burn.v": "burn.v.02",
+        "conflagration.n": "conflagration.n.01",
+        "inferno.n": "conflagration.n.01",
+        "fire.n": "fire.n.03",
+        "hot spot.n": "hot_spot.n.02",
+        "backfire.n": "backfire.n.03",
+        "campfire.n": "campfire.n.01",
+        "flames.n": "fire.n.03",
+        "spot fire.n": "fire.n.01",
+        "blaze.n": "blaze.n.01",
+        "blaze.v": "blaze.v.03",
+        "on fire.a": "ablaze.s.02",
+        "brush fire.n": "brush_fire.n.01",
+        "rage.v": "ramp.v.02",
+        "bonfire.n": "bonfire.n.01",
+        "ablaze.a": "ablaze.s.02",
+        "alight.a": "ablaze.s.02"
+      }
+    },
+    "Location_in_time": {
+      "title": "location.n.01",
+      "FEs": {
+        "Relative_time": "time.n.01",
+        "Name": "name.n.01",
+        "Whole": "whole.n.02",
+        "Focal_time": "time.n.01",
+        "Salient_event": "event.n.01",
+        "Descriptor": "form.n.01"
+      },
+      "LUs": { "time.n": "time.n.01", "date.n": "date.n.06", "day.n": "day.n.02" }
+    },
+    "Speed_description": {
+      "title": "description.n.01",
+      "FEs": {
+        "Entity": "entity.n.01",
+        "Attribute": "attribute.n.02",
+        "Speed": "speed.n.01",
+        "Degree": "degree.n.01",
+        "Time": "time.n.03",
+        "Circumstances": "circumstance.n.01",
+        "Explanation": "explanation.n.01"
+      },
+      "LUs": {
+        "fast.a": "fast.a.01",
+        "quick.a": "agile.s.01",
+        "speedy.a": "rapid.s.02",
+        "speed.n": "speed.n.02",
+        "breakneck.a": "breakneck.s.01",
+        "rate.n": "pace.n.03",
+        "pace.n": "pace.n.03",
+        "rapidly.adv": "quickly.r.01",
+        "speedily.adv": "quickly.r.01",
+        "smart.a": "smart.s.06",
+        "rapid.a": "rapid.s.02"
+      }
+    }
+  }
