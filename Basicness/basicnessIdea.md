@@ -200,7 +200,7 @@ y_prob = clf.predict_proba(X_test)[:,1]
 - **Step principale** : definire correttamente le **etichette** (label) sfruttando i rapporti di frequenza nei due corpus.
 - **Estendere** : aggiungendo WordNet e altre fonti, arricchisci le feature e migliori la precisione.
 
-Con questi passaggi, otterrai un modello in grado di stimare uno “score di basicness” (o di classificare parole in basic/advanced) basandosi sulla “vicinanza” lessicale al linguaggio per bambini o per adulti
+Con questi passaggi, otterrai un modello in grado di stimare uno “score di basicness” (o di classificare parole in basic/advanced) basandosi sulla “vicinanza” lessicale al linguaggio per bambini o per aduti
 
 ---
 
@@ -219,3 +219,129 @@ Con questi passaggi, otterrai un modello in grado di stimare uno “score di bas
 
 - Mettere le feature delle parole con cui cooccore maggiormente o iperonimi/iponimi
 - Usare come feature lo score di un modello a bigrammi/trigrammi su due corpus
+
+# Embeddings
+
+### **Step 1: Preparare i Corpus**
+
+Avrai bisogno di due dataset distinti:
+
+1. **Corpus per bambini** (es. Simple English Wikipedia, libri per ragazzi).
+2. **Corpus per adulti** (es. articoli scientifici, narrativa complessa).
+
+### **Step 2: Addestrare Word Embeddings**
+
+Puoi usare librerie come **Gensim** per addestrare modelli di embedding come **Word2Vec** o **FastText** .
+
+```python
+from gensim.models import Word2Vec
+from nltk.tokenize import word_tokenize
+import nltk
+
+# Scarica un tokenizer
+nltk.download('punkt')
+
+# Carica e pre-elabora i corpus
+def preprocess_corpus(file_path):
+    with open(file_path, 'r', encoding='utf-8') as f:
+        text = f.read().lower()
+    sentences = [word_tokenize(sent) for sent in text.splitlines() if sent.strip()]
+    return sentences
+
+# Corpus per bambini e adulti
+child_corpus_sentences = preprocess_corpus("child_corpus.txt")
+adult_corpus_sentences = preprocess_corpus("adult_corpus.txt")
+
+# Addestramento Word2Vec per entrambi i domini
+child_model = Word2Vec(sentences=child_corpus_sentences, vector_size=100, window=5, min_count=1, sg=1, epochs=10)
+adult_model = Word2Vec(sentences=adult_corpus_sentences, vector_size=100, window=5, min_count=1, sg=1, epochs=10)
+
+# Salva i modelli
+child_model.save("child_word2vec.model")
+adult_model.save("adult_word2vec.model")
+```
+
+### Step 3: Confrontare Embeddings
+
+Dopo aver generato i modelli, puoi calcolare la similarità di una parola rispetto ai due domini.
+
+```python
+from gensim.models import Word2Vec
+from scipy.spatial.distance import cosine
+
+# Carica i modelli
+child_model = Word2Vec.load("child_word2vec.model")
+adult_model = Word2Vec.load("adult_word2vec.model")
+
+def get_domain_similarity(word):
+    if word in child_model.wv and word in adult_model.wv:
+        child_vector = child_model.wv[word]
+        adult_vector = adult_model.wv[word]
+        # Calcola la similarità con cosine similarity
+        similarity_child = 1 - cosine(child_vector, child_model.wv.get_mean_vector(child_model.wv.index_to_key))
+        similarity_adult = 1 - cosine(adult_vector, adult_model.wv.get_mean_vector(adult_model.wv.index_to_key))
+        return similarity_child, similarity_adult
+    else:
+        return None, None
+
+# Testa con una parola
+word = "apple"
+similarity_child, similarity_adult = get_domain_similarity(word)
+print(f"Similarità per '{word}':")
+print(f"  Bambini: {similarity_child:.4f}")
+print(f"  Adulti: {similarity_adult:.4f}")
+
+```
+
+### Step 4: Usare Embeddings come Feature
+
+Puoi aggiungere queste similarità come feature nel tuo dataset.
+
+```python
+def add_embedding_features(df):
+child_similarities = []
+adult_similarities = []
+
+    for word in df['word']:
+        similarity_child, similarity_adult = get_domain_similarity(word)
+        child_similarities.append(similarity_child)
+        adult_similarities.append(similarity_adult)
+
+    df['similarity_to_child'] = child_similarities
+    df['similarity_to_adult'] = adult_similarities
+    return df
+
+# Aggiungi le feature al dataframe
+
+df = add_embedding_features(df)
+print(df.head())
+```
+
+### Se la parola non è presente:
+
+#### Usa un Modello di Backup
+
+Se la parola non è presente nei tuoi corpus, puoi fare riferimento a un modello pre-addestrato come GloVe o FastText, che hanno vocabolari molto ampi. Questo approccio sfrutta embeddings più generici:
+
+```python
+from gensim.models import KeyedVectors
+
+# Carica GloVe o FastText come modello di backup
+
+glove_model = KeyedVectors.load_word2vec_format('glove.6B.100d.txt', binary=False)
+
+def get_domain_similarity_with_backup(word):
+   if word in child_model.wv and word in adult_model.wv:
+      child_vector = child_model.wv[word]
+      adult_vector = adult_model.wv[word]
+      similarity_child = 1 - cosine(child_vector, child_model.wv.get_mean_vector(child_model.wv.index_to_key))
+      similarity_adult = 1 - cosine(adult_vector, adult_model.wv.get_mean_vector(adult_model.wv.index_to_key))
+   return similarity_child, similarity_adult
+   elif word in glove_model.key_to_index: # Usa GloVe come backup
+      word_vector = glove_model[word]
+      similarity_child = 1 - cosine(word_vector, child_model.wv.get_mean_vector(child_model.wv.index_to_key))
+      similarity_adult = 1 - cosine(word_vector, adult_model.wv.get_mean_vector(adult_model.wv.index_to_key))
+   return similarity_child, similarity_adult
+   else:
+      return 0.5, 0.5
+```

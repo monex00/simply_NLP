@@ -1,0 +1,249 @@
+synset,word,prob,predict,target
+Synset('news.n.01'),intelligence,0.91,1,1
+Synset('inversion.n.08'),inversion,0.48,0,1
+Synset('executive_clemency.n.01'),executive clemency,0.06,0,0
+Synset('respect.n.03'),esteem,0.83,1,1
+Synset('respect.n.03'),regard,0.94,1,1
+Synset('position.n.06'),spot,0.97,1,1
+Synset('position.n.06'),place,0.93,1,1
+Synset('message.n.02'),content,0.91,1,1
+Synset('message.n.02'),substance,0.94,1,1
+Synset('arrest.n.02'),check,0.99,1,1
+Synset('arrest.n.02'),stoppage,0.88,1,1
+Synset('motivation.n.01'),motive,0.99,1,1
+Synset('nose_cone.n.01'),nose cone,0.58,1,0
+Synset('alcalde.n.01'),alcalde,0.27,0,0
+Synset('multitude.n.03'),multitude,0.99,1,1
+Synset('multitude.n.03'),hoi polloi,0.95,1,1
+Synset('book.n.02'),book,0.91,1,1
+Synset('military_position.n.01'),position,0.42,0,0
+Synset('power.n.05'),force,0.98,1,1
+Synset('pace.n.03'),pace,0.99,1,1
+Synset('american_labor_party.n.01'),American Labor Party,0.04,0,0
+Synset('lady's_smock.n.01'),cuckooflower,0.02,0,0
+Synset('clasp.n.02'),grip,0.07,0,0
+Synset('form.n.03'),form,0.96,1,1
+Synset('distaff.n.01'),distaff,0.36,0,0
+Synset('pinnacle.n.03'),pinnacle,0.47,0,0
+Synset('direction.n.06'),direction,0.97,1,1
+Synset('shape.n.01'),conformation,0.96,1,1
+Synset('movie.n.01'),movie,0.88,1,1
+Synset('movie.n.01'),picture,0.96,1,1
+Synset('movie.n.01'),picture show,0.99,1,1
+Synset('impudence.n.01'),impertinence,0.02,0,0
+Synset('movement.n.04'),social movement,0.86,1,1
+Synset('esteem.n.01'),esteem,0.41,0,0
+Synset('viewing_audience.n.01'),TV audience,0.13,0,0
+Synset('handle.n.01'),handle,0.99,1,1
+Synset('latest.n.01'),latest,0.69,1,1
+Synset('rate.n.01'),rate,0.97,1,1
+Synset('monetary_value.n.01'),price,0.91,1,0
+Synset('monetary_value.n.01'),cost,0.9,1,0
+Synset('test.n.05'),run,0.7,1,1
+Synset('peroration.n.02'),peroration,0.23,0,0
+Synset('light.n.01'),light,0.64,1,1
+Synset('fall.n.06'),downfall,0.6,1,1
+Synset('stationary_stochastic_process.n.01'),stationary stochastic process,0.1,0,0
+Synset('assessment.n.03'),assessment,0.44,0,1
+Synset('touch.n.10'),tactile sensation,0.98,1,1
+Synset('pommel.n.01'),pommel,0.29,0,0
+Synset('descant.n.01'),descant,0.13,0,0
+Synset('increase.n.03'),increment,0.97,1,1
+Synset('increase.n.03'),growth,0.98,1,1
+Synset('reaction.n.03'),reaction,0.99,1,1
+Synset('weather.n.01'),atmospheric condition,0.82,1,1
+Synset('helpmate.n.01'),helpmate,0.68,1,1
+Synset('bill.n.03'),banker's bill,0.98,1,1
+Synset('bill.n.03'),bank note,1.0,1,1
+Synset('hegemon.n.01'),hegemon,0.29,0,0
+Synset('car.n.01'),auto,0.91,1,1
+Synset('car.n.01'),machine,0.89,1,1
+Synset('hit.n.03'),smasher,0.7,1,1
+Synset('doggedness.n.01'),doggedness,0.01,0,0
+Synset('doggedness.n.01'),tenacity,0.13,0,0
+Synset('doggedness.n.01'),pertinacity,0.01,0,0
+Synset('attempt.n.01'),attempt,0.97,1,1
+Synset('attempt.n.01'),effort,0.96,1,1
+Synset('aid.n.02'),aid,0.92,1,1
+Synset('aid.n.02'),help,0.94,1,1
+Synset('toilet.n.01'),toilet,1.0,1,1
+Synset('year.n.01'),yr,0.83,1,1
+Synset('process.n.05'),outgrowth,0.93,1,1
+Synset('line.n.29'),demarcation,0.85,1,1
+Synset('base.n.08'),pedestal,0.57,1,1
+Synset('base.n.08'),stand,0.84,1,1
+Synset('speech.n.02'),speech,0.99,1,1
+Synset('lineage.n.01'),blood,0.04,0,0
+Synset('lineage.n.01'),origin,0.01,0,0
+Synset('thinking.n.01'),thought,0.98,1,1
+Synset('thinking.n.01'),mentation,0.99,1,1
+Synset('affray.n.02'),ruffle,0.37,0,0
+Synset('burg.n.01'),burg,0.37,0,0
+Synset('higher_law.n.01'),higher law,0.08,0,0
+Synset('woman.n.01'),adult female,0.75,1,1
+Synset('fight.n.02'),fight,0.99,1,1
+Synset('guess.n.02'),shot,0.65,1,1
+Synset('outtake.n.01'),outtake,0.02,0,0
+Synset('gazette.n.01'),gazette,0.16,0,0
+Synset('shooting.n.01'),shot,0.84,1,1
+Synset('countenance.n.03'),countenance,0.35,0,0
+Synset('countenance.n.03'),visage,0.16,0,0
+Synset('countenance.n.03'),smiler,0.12,0,0
+Synset('meaning.n.02'),substance,0.9,1,1
+Synset('footrace.n.01'),foot race,0.17,0,0
+Synset('deal.n.01'),business deal,0.94,1,1
+Synset('circumstance.n.03'),circumstance,0.92,1,1
+Synset('link.n.06'),link,0.57,1,1
+Synset('kin.n.01'),kin,0.7,1,1
+Synset('child.n.01'),child,0.97,1,1
+Synset('child.n.01'),small fry,0.93,1,1
+Synset('shiva.n.01'),shiva,0.19,0,0
+Synset('shiva.n.01'),shibah,0.16,0,0
+Synset('probability.n.01'),probability,0.88,1,1
+Synset('part.n.09'),section,0.93,1,1
+Synset('south_sea_islands.n.01'),South Sea Islands,0.04,0,0
+Synset('golden_age.n.01'),golden age,0.2,0,0
+Synset('theme.n.03'),theme,0.99,1,1
+Synset('oblateness.n.01'),oblateness,0.13,0,0
+Synset('estimate.n.01'),estimation,0.95,1,1
+Synset('estimate.n.01'),idea,0.94,1,1
+Synset('nation.n.02'),country,0.99,1,1
+Synset('sphere.n.01'),sphere,1.0,1,1
+Synset('sphere.n.01'),domain,1.0,1,1
+Synset('advertence.n.01'),advertence,0.28,0,0
+Synset('advertence.n.01'),advertency,0.28,0,0
+Synset('holy_order.n.01'),Order,0.86,1,0
+Synset('judgment.n.01'),judgment,0.81,1,1
+Synset('judgment.n.01'),judgement,0.81,1,1
+Synset('counterbombardment.n.01'),counterbombardment,0.23,0,0
+Synset('meeting.n.03'),meeting,0.95,1,1
+Synset('incandescence.n.02'),incandescence,0.16,0,0
+Synset('undivided_interest.n.01'),undivided interest,0.24,0,0
+Synset('support_level.n.01'),support level,0.02,0,0
+Synset('trinity.n.02'),Holy Trinity,0.0,0,0
+Synset('trinity.n.02'),Blessed Trinity,0.0,0,0
+Synset('system.n.02'),system,0.99,1,1
+Synset('amount.n.02'),amount,0.97,1,1
+Synset('art_nouveau.n.01'),art nouveau,0.27,0,0
+Synset('fun.n.02'),fun,0.96,1,1
+Synset('fun.n.02'),sport,0.98,1,1
+Synset('nature_study.n.01'),nature study,0.01,0,0
+Synset('act.n.04'),number,0.97,1,1
+Synset('hose.n.03'),hose,0.69,1,0
+Synset('opinion.n.04'),judgement,0.97,1,1
+Synset('safety_match.n.01'),book matches,0.0,0,0
+Synset('fabric.n.01'),fabric,0.11,0,0
+Synset('wall.n.01'),wall,0.96,1,1
+Synset('dynamism.n.03'),zing,0.06,0,0
+Synset('earning_per_share.n.01'),earning per share,0.11,0,0
+Synset('convention.n.02'),pattern,1.0,1,1
+Synset('convention.n.02'),rule,1.0,1,1
+Synset('experience.n.02'),experience,0.87,1,1
+Synset('hosanna.n.01'),hosanna,0.04,0,0
+Synset('end.n.11'),end,0.69,1,1
+Synset('store.n.02'),stock,0.98,1,1
+Synset('particular.n.01'),particular,0.73,1,1
+Synset('conjunction.n.05'),conjunction,0.73,1,1
+Synset('education.n.01'),education,1.0,1,1
+Synset('education.n.01'),teaching,0.99,1,1
+Synset('bilge.n.02'),bilge,0.3,0,0
+Synset('music.n.01'),music,0.88,1,1
+Synset('meter.n.03'),metre,0.9,1,1
+Synset('meter.n.03'),beat,0.83,1,1
+Synset('associateship.n.01'),associateship,0.05,0,0
+Synset('behalf.n.01'),behalf,0.46,0,0
+Synset('cry.n.01'),cry,1.0,1,1
+Synset('painting.n.01'),picture,0.88,1,1
+Synset('couple.n.04'),couple,0.9,1,1
+Synset('couple.n.04'),span,0.94,1,1
+Synset('couple.n.04'),yoke,0.98,1,1
+Synset('couple.n.04'),distich,0.96,1,1
+Synset('couple.n.04'),duet,0.95,1,1
+Synset('flower.n.03'),peak,0.85,1,1
+Synset('support.n.06'),living,0.99,1,1
+Synset('ground.n.05'),ground,0.7,1,1
+Synset('work_force.n.01'),work force,0.49,0,1
+Synset('work_force.n.01'),workforce,0.75,1,1
+Synset('exemplar.n.01'),example,0.34,0,0
+Synset('exemplar.n.01'),good example,0.25,0,0
+Synset('numeral.n.01'),number,0.99,1,1
+Synset('mire.n.01'),quag,0.03,0,0
+Synset('hypothesis.n.02'),hypothesis,0.93,1,1
+Synset('hypothesis.n.02'),theory,0.89,1,1
+Synset('earth.n.02'),ground,0.9,1,1
+Synset('scene.n.04'),shot,0.67,1,1
+Synset('human_body.n.01'),material body,0.02,0,0
+Synset('human_body.n.01'),shape,0.03,0,0
+Synset('human_body.n.01'),bod,0.03,0,0
+Synset('human_body.n.01'),flesh,0.01,0,0
+Synset('country.n.02'),country,0.58,1,1
+Synset('country.n.02'),state,0.74,1,1
+Synset('quality.n.03'),quality,0.88,1,1
+Synset('report.n.01'),study,0.93,1,1
+Synset('report.n.01'),written report,0.81,1,1
+Synset('eye.n.01'),oculus,0.81,1,1
+Synset('activity.n.01'),activity,0.87,1,1
+Synset('thousand.n.01'),one thousand,0.52,1,1
+Synset('thousand.n.01'),G,0.95,1,1
+Synset('thousand.n.01'),thou,0.94,1,1
+Synset('use.n.01'),usage,0.88,1,1
+Synset('lighter.n.02'),igniter,0.97,1,1
+Synset('lighter.n.02'),ignitor,0.97,1,1
+Synset('kind.n.01'),sort,0.96,1,1
+Synset('calendar.n.03'),calendar,0.45,0,1
+Synset('magazine.n.03'),magazine,0.63,1,1
+Synset('face.n.01'),face,0.89,1,1
+Synset('face.n.01'),human face,0.67,1,1
+Synset('spaghetti_western.n.01'),spaghetti Western,0.12,0,0
+Synset('natural_process.n.01'),activity,0.95,1,1
+Synset('qing.n.01'),Ch'ing dynasty,0.08,0,0
+Synset('qing.n.01'),Manchu dynasty,0.08,0,0
+Synset('bell_gable.n.01'),bell gable,0.04,0,0
+Synset('place.n.10'),station,0.88,1,1
+Synset('calendar_month.n.01'),calendar month,0.85,1,1
+Synset('union_shop.n.01'),union shop,0.25,0,0
+Synset('libidinal_energy.n.01'),libidinal energy,0.21,0,0
+Synset('club.n.02'),order,1.0,1,1
+Synset('attention.n.01'),attending,0.93,1,1
+Synset('region.n.01'),part,0.95,1,1
+Synset('godhead.n.01'),Lord,0.27,0,0
+Synset('godhead.n.01'),Creator,0.04,0,0
+Synset('can.n.01'),can,0.97,1,1
+Synset('space.n.07'),blank space,0.44,0,1
+Synset('contribution.n.01'),part,0.97,1,1
+Synset('secondo.n.01'),secondo,0.07,0,1
+Synset('side_yard.n.01'),side yard,0.1,0,0
+Synset('church.n.01'),Christian church,0.78,1,1
+Synset('post.n.01'),post,0.95,1,1
+Synset('workplace.n.01'),work,0.84,1,1
+Synset('bridge_player.n.01'),hand,0.63,1,0
+Synset('kernel.n.03'),essence,0.0,0,0
+Synset('kernel.n.03'),heart,0.0,0,0
+Synset('illustration.n.01'),illustration,0.4,0,1
+Synset('meteortropism.n.01'),meteortropism,0.09,0,0
+Synset('ship's_company.n.01'),ship's company,0.01,0,0
+Synset('care.n.01'),tending,0.97,1,1
+Synset('instruction.n.04'),instruction,0.94,1,1
+Synset('character.n.04'),theatrical role,0.9,1,1
+Synset('character.n.04'),persona,0.88,1,1
+Synset('back.n.08'),back,0.93,1,1
+Synset('principal.n.02'),school principal,0.93,1,1
+Synset('conclusion.n.08'),conclusion,0.96,1,1
+Synset('hired_hand.n.01'),hand,0.65,1,0
+Synset('beginning.n.02'),get-go,1.0,1,1
+Synset('set.n.05'),band,1.0,1,1
+Synset('autolysis.n.01'),self-digestion,0.0,0,0
+Synset('terror.n.03'),little terror,0.59,1,1
+Synset('moment.n.01'),minute,1.0,1,1
+Synset('diminution.n.02'),diminution,0.19,0,0
+Synset('intrigue.n.01'),machination,0.23,0,0
+Synset('desensitization_technique.n.01'),systematic desensitisation,0.0,0,0
+Synset('radiator_cap.n.01'),radiator cap,0.03,0,0
+Synset('man.n.10'),man,0.84,1,1
+Synset('principle.n.01'),principle,0.9,1,1
+Synset('promontory.n.01'),promontory,0.21,0,0
+Synset('picture.n.01'),icon,0.92,1,1
+Synset('reading.n.03'),reading,0.99,1,1
+Synset('sanctimoniousness.n.01'),sanctimoniousness,0.15,0,0
+Synset('sanctimoniousness.n.01'),sanctimony,0.23,0,0
+Synset('chalcedony.n.01'),chalcedony,0.44,0,0

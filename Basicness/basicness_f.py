@@ -7,13 +7,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 from sklearn.model_selection import KFold, cross_val_score
-from sklearn.metrics import silhouette_score
-import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import silhouette_score
 import numpy as np
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from gensim.corpora import Dictionary
 
 from nltk.corpus import wordnet as wn
 from nltk.corpus import cmudict
@@ -31,8 +28,6 @@ def pronunciation_difficulty(word):
     else:
         return len(word)
 
-
-
 def read_dataset(file_path):
     rows = []  
     with open(file_path, 'r') as file:
@@ -48,6 +43,22 @@ def read_dataset(file_path):
     dataframe = pd.DataFrame(rows)
     return dataframe
 
+def corpus_to_documents(filename):
+    with open(filename, 'r') as file:
+        dataset = file.read()
+
+    documents = dataset.split("\n\n")
+    documents = [word_tokenize(doc.lower()) for doc in documents]
+    documents = [[w for w in doc if w not in stopwords.words('english')] for doc in documents]
+    documents = [[w for w in doc if w.isalpha()] for doc in documents]
+    documents = [[lemmatizer.lemmatize(w) for w in doc] for doc in documents]
+    return Dictionary(documents), documents
+
+def calculate_means(df, features):
+    mean_features_df = pd.DataFrame(columns=['basic', 'advanced'])
+    for feature in features:
+        mean_features_df.loc[feature] = [df[df['target'] == 0][feature].mean(), df[df['target'] == 1][feature].mean()]
+    return mean_features_df
 
 def calculate_features(df):
     df['word_length'] = df['word'].apply(lambda x: len(x))
@@ -60,8 +71,6 @@ def calculate_features(df):
     df['word_num_senses'] = df['word'].apply(lambda x: len(wn.synsets(x)))
     df['synset_gloss_length'] = df['synset'].apply(lambda x: len(string_to_synset(x).definition()))
     df['synset_examples_length'] = df['synset'].apply(lambda x: sum(len(example) for example in string_to_synset(x).examples()))
-
-    
     return df 
 
 def string_to_synset(synset_str):
@@ -71,86 +80,32 @@ def string_to_synset(synset_str):
     else:
         raise ValueError("Formato stringa non valido")
     
-def k_means_clustering_with_plot(df, n_clusters=3, output_file="kmeans_results.csv"):
-    # Selezione delle feature
-    features = ['word_length', 'pronunciation_difficulty', 'synset_depth', 'word_num_senses',
-            'synset_max_depth', 'synset_num_hypernyms', 
-                'synset_num_hyponyms', 'synset_num_lemmas',
-            ]
-    X = df[features].values
 
-    # Standardizzazione
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
 
-    # K-Means
-    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
-    cluster_labels = kmeans.fit_predict(X_scaled)
-
-    # PCA per la riduzione a 2 dimensioni
-    pca = PCA(n_components=2)
-    X_pca = pca.fit_transform(X_scaled)
-
-    # Plot dei cluster
-    plt.figure(figsize=(8, 6))
-    for cluster in range(n_clusters):
-        plt.scatter(
-            X_pca[cluster_labels == cluster, 0], 
-            X_pca[cluster_labels == cluster, 1], 
-            label=f"Cluster {cluster}"
-        )
-    plt.scatter(
-        kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1],
-        s=200, c='red', marker='X', label='Centroids'
-    )
-    plt.title(f"K-Means Clustering (n_clusters={n_clusters})")
-    plt.xlabel("PCA Dimension 1")
-    plt.ylabel("PCA Dimension 2")
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-
-    # Silhouette Score
-    silhouette_avg = silhouette_score(X_scaled, cluster_labels)
-    print(f"Silhouette Score: {silhouette_avg}")
-
-    # Salva i risultati
-    df['Cluster'] = cluster_labels
-    df.to_csv(output_file, index=False)
-    print(f"Risultati del clustering salvati in {output_file}")
-
-    return kmeans, silhouette_avg
     
 def train_and_evaluate_with_cv(df, output_file="cv_results.csv", detailed_output_file="fold1_results.csv", n_splits=5):
-    # Definiamo le feature e il target
     features = ['word_length', 'pronunciation_difficulty', 'synset_depth', 'word_num_senses',
                 'synset_max_depth', 'synset_num_hypernyms', 
                  'synset_num_hyponyms', 'synset_num_lemmas', 'synset_gloss_length', 'synset_examples_length']
     X = df[features].values
     y = df['target'].values
 
-    # Configura K-Fold Cross-Validation
     kf = KFold(n_splits=n_splits, shuffle=True, random_state=42)
     clf = RandomForestClassifier(random_state=42)
 
-    # Liste per salvare metriche
     accuracies, precisions, recalls, f1_scores = [], [], [], []
 
-    # Esegui K-Fold Cross-Validation
     fold = 1
     for train_index, test_index in kf.split(X):
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
 
-        # Addestra il modello
         clf.fit(X_train, y_train)
 
-        # Predizioni
         y_pred = clf.predict(X_test)
         y_pred_proba = clf.predict_proba(X_test)[:, 1]
 
-        # Se è il primo fold, salva i risultati dettagliati
-        if fold == 2:
+        """ if fold == 1:
             detailed_results = pd.DataFrame({
                 'synset': df.iloc[test_index]['synset'].values,
                 'word': df.iloc[test_index]['word'].values,
@@ -160,8 +115,7 @@ def train_and_evaluate_with_cv(df, output_file="cv_results.csv", detailed_output
             })
             detailed_results.to_csv(detailed_output_file, index=False)
             print(f"Dettagli del primo fold salvati in {detailed_output_file}")
-
-        # Calcola metriche
+        """
         accuracies.append(accuracy_score(y_test, y_pred))
         precisions.append(precision_score(y_test, y_pred))
         recalls.append(recall_score(y_test, y_pred))
@@ -174,7 +128,6 @@ def train_and_evaluate_with_cv(df, output_file="cv_results.csv", detailed_output
         print("  F1 Score:", f1_scores[-1])
         fold += 1
 
-    # Media delle metriche
     avg_accuracy = np.mean(accuracies)
     avg_precision = np.mean(precisions)
     avg_recall = np.mean(recalls)
@@ -186,27 +139,12 @@ def train_and_evaluate_with_cv(df, output_file="cv_results.csv", detailed_output
     print("Recall:", avg_recall)
     print("F1 Score:", avg_f1)
 
-    # Salva i risultati per ogni fold in un file
-    results_df = pd.DataFrame({
-        'Fold': list(range(1, n_splits + 1)),
-        'Accuracy': accuracies,
-        'Precision': precisions,
-        'Recall': recalls,
-        'F1 Score': f1_scores
-    })
-    results_df.to_csv(output_file, index=False)
-    print(f"Risultati salvati in {output_file}")
-
     return clf
 
-df = calculate_features(read_dataset("data/1.json"))
+""" df = calculate_features(read_dataset("data/1.json"))
 print(df)
-# print df to file
-# df.to_csv("data/1.csv", index=False)
+mean_for_feature(df)
+
 classifier = train_and_evaluate_with_cv(df)
-
-# kmeans_model, silhouette_avg = k_means_clustering_with_plot(df, n_clusters=2, output_file="kmeans_results.csv")
-
-
-
+"""
 
