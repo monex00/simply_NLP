@@ -43,12 +43,12 @@ def remove_stopwords(text):
     words = [word for word in words if word not in stopwords.words("english")]
     return " ".join(words)
 
-stemmer = porter.PorterStemmer()
-lemmatizer = WordNetLemmatizer()
-print(lemmatizer.lemmatize("writing"))
-print(lemmatizer.lemmatize("writing", pos="v"))
+""" stemmer = porter.PorterStemmer()
+lemmatizer = WordNetLemmatizer() """
+""" print(lemmatizer.lemmatize("writing"))
+print(lemmatizer.lemmatize("writing", pos="v")) """
 
-dataset = pd.read_csv("TLN-definitions-24.csv", sep=",")
+""" dataset = pd.read_csv("TLN-definitions-24.csv", sep=",")
 #remove first column
 dataset = dataset.iloc[:, 1:]
 
@@ -76,4 +76,4 @@ print(df_score_stem)
 
 df_score_lem = pd.DataFrame(index=dataset_lem.columns.values, columns=['score'])
 df_score_lem['score'] = [sum(word_scores) / len(word_scores) for word_scores in scores_lem]
-print(df_score_lem)
+print(df_score_lem) """
